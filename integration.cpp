@@ -43,6 +43,34 @@ auto rk4(Vec3 f(double, Vec3))
         f( t     , y       )*dt          );} ;
 }
 
+class Black_Hole{
+	public: 
+	double g[4][4]; // Metix Index low low 
+	double dg[4][4][4]; //
+	double chris[4][4][4]; // Christoffel index high low low 
+	double jacobian[4][4]
+
+
+	void Black_hole(Vec3 pos){
+	}
+	
+	
+	
+/*	
+		jacobian[0][0] = x/rr ;  
+  		jacobian[1][0] = cosphi*z/rr2 ; 
+  		jacobian[2][0] = -y/rho2 ; 
+  		jacobian[0][1] = y/rr ; 
+  		jacobian[1][1] = sinphi*z/rr2 ; 
+  		jacobian[2][1] = x/rho2 ; 
+  		jacobian[0][2] = z/rr ; 
+  		jacobian[1][2] = -rho/rr2 ;  
+  		jacobian[2][2] = 0.0 ; 	
+*/
+
+	}
+}
+
 
 int main(void)
 {
