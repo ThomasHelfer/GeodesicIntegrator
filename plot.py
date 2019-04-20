@@ -48,11 +48,19 @@ rc['legend.fontsize'] = F2
 pos = np.loadtxt("xpos.csv",unpack=True)
 
 print(pos)
+mass = 1; 
+theta = np.linspace(0,2*np.pi,100);
+x_horizon = 2*mass*np.sin(theta)
+y_horizon = 2*mass*np.cos(theta) 
+x_ISCO = 6*mass*np.sin(theta)
+y_ISCO = 6*mass*np.cos(theta)
 
 plt.figure(figsize=(14, 14), dpi=200)
-plt.plot(pos[0],pos[1],label = "x position " )
-#plt.xlabel(r'$x/m_{init}$')
-#plt.ylabel(r'$r\psi_4 m_{init}$')
+plt.plot(pos[0],pos[1],label = "Geodesic" )
+plt.plot(x_horizon,y_horizon,label = 'horizon',color = 'black')
+plt.plot(x_ISCO,y_ISCO,label = 'ISCO')
+plt.xlabel(r'$x~[M^{-1}]$')
+plt.ylabel(r'$y~[M^{-1}]$')
 #plt.xlim(-40,max(time_2)/minit[1])
 #plt.xlim([-10,10])
 #plt.ylim([-10,10])
