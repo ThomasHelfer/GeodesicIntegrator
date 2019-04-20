@@ -4,6 +4,7 @@
  *
  */
 # include <iostream>
+#include <fstream>
 # include <math.h>
 # include <vector>
 # include <algorithm> 
@@ -127,18 +128,34 @@ class Black_Hole{
   		{  
    		 FOR2(k,l){
 			g[i][j] += g_spher[k][l]*jacobian[k][i]*jacobian[l][j]; 
-			g_UU[i][j] += g_spher_UU[k][l]*jacobian[i][k]*jacobian[j][l]; 
     		    } 			
   		}
 		double unity[4][4] = {};
-			
+	
+		double det = g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])-
+                      g[0][1]*(g[2][2]*g[1][0]-g[1][2]*g[2][0])+
+                      g[0][2]*(g[1][0]*g[2][1]-g[1][1]*g[2][0]);	
+
+		double det_inverse = 1.0/det;
+
+        	g_UU[0][0] = (g[1][1]*g[2][2] - g[1][2]*g[1][2]) * det_inverse;
+        	g_UU[0][1] = (g[0][2]*g[1][2] - g[0][1]*g[2][2]) * det_inverse;
+        	g_UU[0][2] = (g[0][1]*g[1][2] - g[0][2]*g[1][1]) * det_inverse;
+        	g_UU[1][1] = (g[0][0]*g[2][2] - g[0][2]*g[0][2]) * det_inverse;
+        	g_UU[1][2] = (g[0][1]*g[0][2] - g[0][0]*g[1][2]) * det_inverse;
+        	g_UU[2][2] = (g[0][0]*g[1][1] - g[0][1]*g[0][1]) * det_inverse;
+        	g_UU[1][0] = g_UU[0][1];
+       		g_UU[2][0] = g_UU[0][2];
+        	g_UU[2][1] = g_UU[1][2];
+
 		FOR2(i,j)
 		{
 			FOR1(k)
 			{
-			unity[i][j] += g[i][k]*g_UU[k][j];
+				unity[i][j] += g[i][k]*g_UU[k][j];
 			}
 		}
+
 
  		FOR3(i,j,m)
   		{  
@@ -185,7 +202,7 @@ int main(void)
 
         const double TIME_MAXIMUM = 10.0, WHOLE_TOLERANCE = 1e-12 ;
         const double T_START = 0.0, DT = 0.001;
-	const Vec3 Y_START(1.0, 1.0, 1.0, 1.0, 1.0, 1.0,1.0, 1.0);
+	const Vec3 Y_START(10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0);
 	Black_Hole BH;
 
         auto eval_solution = [               ](double t          )->double{ return pow(t*t+4,2)/16                   	; } ;
@@ -196,6 +213,9 @@ int main(void)
  
         Vec3 y = Y_START;
 	double t = T_START;
+
+	ofstream myfile("xpos.csv");
+
         while(t <= TIME_MAXIMUM) {
 /*          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.x,find_error(t,y.x)); }
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.y,find_error(t,y.y)); }
@@ -207,7 +227,10 @@ int main(void)
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vt,find_error(t,y.vt)); }
 */
   	  y = y + dy(t,y,DT) ; t += DT;			
+	  myfile << y.x <<"	" << y.y <<   endl;
 	}
+
+	myfile.close();
 
   	return 0;
 }
