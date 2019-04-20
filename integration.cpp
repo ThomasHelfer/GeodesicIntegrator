@@ -61,16 +61,22 @@ class Black_Hole{
 	public : 
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
 
-		double mass = 1;
+		
+		double M = 1;
 		double g[4][4] = {}; // Metix Index low low 
-		double g_spher[4][4] = {}; // Metix Index low low 
+		double g_UU[4][4] = {};
+		double g_spher[4][4] = {};
+		double g_spher_UU[4][4] = {}; // Metix Index low low 
 		double dg[4][4][4]  = {}; //
-		double chris[4][4][4] = {}; // Christoffel index high low low 
+		double dg_spher[4][4][4]  = {}; //
+		double chris_LLL[4][4][4] = {}; // Christoffel index low low low 
+		double chris_ULL[4][4][4] = {}; // Christoffel index high low low 
 		double jacobian[4][4] = {};
 
 		double x[4] = {v.x,v.y,v.z,v.t};
 		double dx[4] = {v.vx,v.vy,v.vz,v.vt};
-		
+		double ddx[4] = {};
+
 		double rr2 =   pow(v.x,2)+ pow(v.y,2) + pow(v.z,2);
   		double rho2 =  pow(v.x,2)+ pow(v.y,2);
 
@@ -78,6 +84,7 @@ class Black_Hole{
   		double rho = sqrt(rho2);
  		 // sinus(theta)
   		double sintheta = rho/rr;
+  		double costheta = v.z/rr;
   		// cos(phi)
   		double cosphi = v.x/rho ; 
  	 	// sin(phi)
@@ -85,14 +92,23 @@ class Black_Hole{
 
 		// ==================== 
 
-		g_spher[0][0] = 1./(1.0 - 2.0*mass/rr);
+		g_spher[0][0] = 1./(1.0 - 2.0*M/rr);
   		// Define theta theta component 
   		g_spher[1][1] = rr2;
   		// Define phi phi component 
   		g_spher[2][2] = rr2*pow(sintheta,2);
 		// Devine tt component 
-		g_spher[3][3] = (1. - 2.0*mass/rr);
+		g_spher[3][3] = (1. - 2.0*M/rr);
+		
+		FOR1(i){g_spher_UU[i][i] = 1./g_spher[i][i];};
 
+
+		dg_spher[0][0][0] = (-2.*M)/pow((-2.*M + rr),2.);
+		dg_spher[1][1][0] = 2.*rr;
+		dg_spher[2][2][0] = 2.*rr*pow(sintheta,2);
+		dg_spher[3][3][0] = 2.*M/rr2;
+
+		dg_spher[2][2][1] = rr2*2.*sintheta*costheta;
 
 		jacobian[0][0] = v.x/rr ;  
   		jacobian[1][0] = cosphi*v.z/rr2 ; 
@@ -111,13 +127,53 @@ class Black_Hole{
   		{  
    		 FOR2(k,l){
 			g[i][j] += g_spher[k][l]*jacobian[k][i]*jacobian[l][j]; 
+			g_UU[i][j] += g_spher_UU[k][l]*jacobian[i][k]*jacobian[j][l]; 
+    		    } 			
+  		}
+		double unity[4][4] = {};
+			
+		FOR2(i,j)
+		{
+			FOR1(k)
+			{
+			unity[i][j] += g[i][k]*g_UU[k][j];
+			}
+		}
+
+ 		FOR3(i,j,m)
+  		{  
+   		 FOR3(k,l,n){
+			dg[i][j][m] += dg_spher[k][l][n]*jacobian[k][i]*jacobian[l][j]*jacobian[n][m]; 
     		    } 			
   		}
 
+		//=========================
 
-       
+      		FOR3(i,j,k)
+        	{
+            		chris_LLL[i][j][k] = 0.5*(dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
+        	}
+        	FOR3(i,j,k)
+        	{
+            		chris_ULL[i][j][k] = 0;
+            		FOR1(l)
+            		{
+                 		chris_ULL[i][j][k] += g_UU[i][l]*chris_LLL[l][j][k];
+            		}
+        	}
+		
+		//=========================
 
-		return v.sqrt3(v)*t;
+		FOR1(i){
+			FOR2(k,l){
+				ddx[i] += - chris_ULL[i][k][l]*dx[k]*dx[l];	
+			}
+		}
+		
+		Vec3 out(dx[0],dx[1],dx[2],dx[3],ddx[0],ddx[1],ddx[2],ddx[3]);		
+
+		return out;
+		//return v.sqrt3(v)*t;
 	};	
 
 
@@ -141,7 +197,7 @@ int main(void)
         Vec3 y = Y_START;
 	double t = T_START;
         while(t <= TIME_MAXIMUM) {
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.x,find_error(t,y.x)); }
+/*          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.x,find_error(t,y.x)); }
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.y,find_error(t,y.y)); }
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.z,find_error(t,y.z)); }
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.t,find_error(t,y.t)); }
@@ -149,8 +205,9 @@ int main(void)
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vy,find_error(t,y.vy)); }
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vz,find_error(t,y.vz)); }
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vt,find_error(t,y.vt)); }
-          y = y + dy(t,y,DT) ; t += DT;
-        }
+*/
+  	  y = y + dy(t,y,DT) ; t += DT;			
+	}
 
   	return 0;
 }
