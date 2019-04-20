@@ -49,7 +49,7 @@ pos = np.loadtxt("xpos.csv",unpack=True)
 
 print(pos)
 
-plt.figure(figsize=(14, 9), dpi=200)
+plt.figure(figsize=(14, 14), dpi=200)
 plt.plot(pos[0],pos[1],label = "x position " )
 #plt.xlabel(r'$x/M_{Init}$')
 #plt.ylabel(r'$r\Psi_4 M_{init}$')

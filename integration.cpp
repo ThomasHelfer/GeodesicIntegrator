@@ -59,11 +59,19 @@ auto rk4(Vec3 f(double, Vec3))
 }
 
 class Black_Hole{
-	public : 
+
+	private:
+	static void printArr(double a[][4]) {
+		FOR1(i){
+		   cout << a[i][0] << " " << a[i][1] << " " << a[i][2] << " " << a[i][3]<< endl;
+		}
+		cout << "-----------" <<endl;
+	}
+
+	public:	
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
 
-		
-		double M = 1;
+		double M = 1;		
 		double g[4][4] = {}; // Metix Index low low 
 		double g_UU[4][4] = {};
 		double g_spher[4][4] = {};
@@ -102,7 +110,6 @@ class Black_Hole{
 		g_spher[3][3] = (1. - 2.0*M/rr);
 		
 		FOR1(i){g_spher_UU[i][i] = 1./g_spher[i][i];};
-
 
 		dg_spher[0][0][0] = (-2.*M)/pow((-2.*M + rr),2.);
 		dg_spher[1][1][0] = 2.*rr;
@@ -183,7 +190,7 @@ class Black_Hole{
 
 		FOR1(i){
 			FOR2(k,l){
-				ddx[i] += - chris_ULL[i][k][l]*dx[k]*dx[l];	
+				ddx[i] += + chris_ULL[i][k][l]*dx[k]*dx[l];	
 			}
 		}
 		
@@ -200,8 +207,8 @@ class Black_Hole{
 int main(void)
 {
 
-        const double TIME_MAXIMUM = 10.0, WHOLE_TOLERANCE = 1e-12 ;
-        const double T_START = 0.0, DT = 0.001;
+        const double TIME_MAXIMUM = 1000.0, WHOLE_TOLERANCE = 1e-12 ;
+        const double T_START = 0.0, DT = 0.01;
 	const Vec3 Y_START(10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0);
 	Black_Hole BH;
 
