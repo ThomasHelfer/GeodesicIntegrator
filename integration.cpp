@@ -8,6 +8,7 @@
 # include <math.h>
 # include <vector>
 # include <algorithm> 
+#include "tensor.hpp"
 using namespace std;
 
 
@@ -71,20 +72,21 @@ class Black_Hole{
 	public:	
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
 
-		double M = 1;		
-		double g[4][4] = {}; // Metix Index low low 
-		double g_UU[4][4] = {};
-		double g_spher[4][4] = {};
-		double g_spher_UU[4][4] = {}; // Metix Index low low 
-		double dg[4][4][4]  = {}; //
-		double dg_spher[4][4][4]  = {}; //
-		double chris_LLL[4][4][4] = {}; // Christoffel index low low low 
-		double chris_ULL[4][4][4] = {}; // Christoffel index high low low 
-		double jacobian[4][4] = {};
+		tensor<2, double> g = {};// Metric Index low low 
+		tensor<2, double> g_UU = {};
 
-		double x[4] = {v.x,v.y,v.z,v.t};
-		double dx[4] = {v.vx,v.vy,v.vz,v.vt};
-		double ddx[4] = {};
+		double M = 1;		
+		tensor<2,double> g_spher    = {};
+		tensor<2,double> g_spher_UU = {}; // Metix Index low low 
+		tensor<3,double> dg 	    = {}; //
+		tensor<3,double> dg_spher   = {}; //
+		tensor<3,double> chris_LLL  = {}; // Christoffel index low low low 
+		tensor<3,double> chris_ULL  = {}; // Christoffel index high low low 
+		tensor<2,double> jacobian   = {};
+
+		tensor<1,double> x 	 = {v.x,v.y,v.z,v.t};
+		tensor<1,double> dx 	 = {v.vx,v.vy,v.vz,v.vt};
+		tensor<1,double> ddx	 = {};
 
 		double rr2 =   pow(v.x,2)+ pow(v.y,2) + pow(v.z,2);
   		double rho2 =  pow(v.x,2)+ pow(v.y,2);
