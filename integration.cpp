@@ -107,14 +107,14 @@ class Black_Hole{
   		// Define phi phi component 
   		g_spher[2][2] = rr2*pow(sintheta,2);
 		// Devine tt component 
-		g_spher[3][3] = (1. - 2.0*M/rr);
+		g_spher[3][3] = -(1. - 2.0*M/rr);
 		
 		FOR1(i){g_spher_UU[i][i] = 1./g_spher[i][i];};
 
 		dg_spher[0][0][0] = (-2.*M)/pow((-2.*M + rr),2.);
 		dg_spher[1][1][0] = 2.*rr;
 		dg_spher[2][2][0] = 2.*rr*pow(sintheta,2);
-		dg_spher[3][3][0] = 2.*M/rr2;
+		dg_spher[3][3][0] = -2.*M/rr2;
 
 		dg_spher[2][2][1] = rr2*2.*sintheta*costheta;
 
@@ -190,7 +190,7 @@ class Black_Hole{
 
 		FOR1(i){
 			FOR2(k,l){
-				ddx[i] += + chris_ULL[i][k][l]*dx[k]*dx[l];	
+				ddx[i] += - chris_ULL[i][k][l]*dx[k]*dx[l];	
 			}
 		}
 		
@@ -209,7 +209,7 @@ int main(void)
 
         const double TIME_MAXIMUM = 1000.0, WHOLE_TOLERANCE = 1e-12 ;
         const double T_START = 0.0, DT = 0.01;
-	const Vec3 Y_START(10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0);
+	const Vec3 Y_START(10.0, 0.0, 0.0, 0.0, 0.0, 0.34, 0.0, 1.0);
 	Black_Hole BH;
 
         auto eval_solution = [               ](double t          )->double{ return pow(t*t+4,2)/16                   	; } ;
@@ -234,7 +234,7 @@ int main(void)
           if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vt,find_error(t,y.vt)); }
 */
   	  y = y + dy(t,y,DT) ; t += DT;			
-	  myfile << y.x <<"	" << y.y <<   endl;
+	  myfile << y.x <<"	" << y.y << "	" << y.z << "	" << y.t << "" <<  endl;
 	}
 
 	myfile.close();
