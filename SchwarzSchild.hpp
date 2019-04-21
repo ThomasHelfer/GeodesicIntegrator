@@ -9,16 +9,10 @@ using namespace std;
 #define FOR3(IDX1,IDX2,IDX3) FOR2(IDX1,IDX2) FOR1(IDX3)
 #define FOR4(IDX1,IDX2,IDX3,IDX4) FOR2(IDX1,IDX2) FOR2(IDX3,IDX4)
 
+
 class Black_Hole{
 
 	private:
-	static void printArr(double a[][4]) {
-		FOR1(i){
-		   cout << a[i][0] << " " << a[i][1] << " " << a[i][2] << " " << a[i][3]<< endl;
-		}
-		cout << "-----------" <<endl;
-	}
-
    	static tensor<2, double> get_metric( double M,  double x, double y, double z){
 
                 tensor<2,double> jacobian   = {};
@@ -99,16 +93,34 @@ class Black_Hole{
 		
 	}
 
+	static tensor<2,double > calculate_spatial_inverse(tensor<2,double> g){
+		tensor<2,double> g_UU;
+
+		double det = g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])-
+                      g[0][1]*(g[2][2]*g[1][0]-g[1][2]*g[2][0])+
+                      g[0][2]*(g[1][0]*g[2][1]-g[1][1]*g[2][0]);	
+
+		double det_inverse = 1.0/det;
+
+        	g_UU[0][0] = (g[1][1]*g[2][2] - g[1][2]*g[1][2]) * det_inverse;
+        	g_UU[0][1] = (g[0][2]*g[1][2] - g[0][1]*g[2][2]) * det_inverse;
+        	g_UU[0][2] = (g[0][1]*g[1][2] - g[0][2]*g[1][1]) * det_inverse;
+        	g_UU[1][1] = (g[0][0]*g[2][2] - g[0][2]*g[0][2]) * det_inverse;
+        	g_UU[1][2] = (g[0][1]*g[0][2] - g[0][0]*g[1][2]) * det_inverse;
+        	g_UU[2][2] = (g[0][0]*g[1][1] - g[0][1]*g[0][1]) * det_inverse;
+        	g_UU[1][0] = g_UU[0][1];
+       		g_UU[2][0] = g_UU[0][2];
+        	g_UU[2][1] = g_UU[1][2];
+		return g_UU;
+	}
+
 	public:	
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
 
 		double M = 1;		
  	        tensor<2,double> g; // Metix Index low low
                 tensor<2,double> g_UU;
-                tensor<2,double> g_spher;
-                tensor<2,double> g_spher_UU; // Metix Index low low
                 tensor<3,double> dg; //
-                tensor<3,double> dg_spher; //
                 tensor<3,double> chris_LLL; // Christoffel index low low low
                 tensor<3,double> chris_ULL; // Christoffel index high low low
                 tensor<2,double> jacobian = {};
@@ -120,12 +132,10 @@ class Black_Hole{
 		FOR2(i,j){
 			g[i][j] = 0;
 			g_UU[i][j] = 0;
-			g_spher_UU[i][j] = 0;
 			jacobian[i][j] = 0;
 		}
 		FOR3(i,j,k){
 			dg[i][j][k] = 0;
-			dg_spher[i][j][k] = 0;
 			chris_LLL[i][j][k] = 0;
 			chris_ULL[i][j][k] = 0;
 		}
@@ -142,7 +152,7 @@ class Black_Hole{
   		double cosphi = v.x/rho ; 
  	 	// sin(phi)
  		double sinphi = v.y/rho ; 
-		double eps = 0.001;
+		double eps = 0.01;
 		if(rr < 2*M+eps){
 			FOR1(i){ddx[i]=0;dx[i]=0;}
 			Vec3 out(dx[0],dx[1],dx[2],dx[3],ddx[0],ddx[1],ddx[2],ddx[3]);		
@@ -151,24 +161,8 @@ class Black_Hole{
 		// ==================== 
 
 		g  = get_metric(M,v.x,v.y,v.z);
-
 	
-		double det = g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])-
-                      g[0][1]*(g[2][2]*g[1][0]-g[1][2]*g[2][0])+
-                      g[0][2]*(g[1][0]*g[2][1]-g[1][1]*g[2][0]);	
-
-		double det_inverse = 1.0/det;
-
-        	g_UU[0][0] = (g[1][1]*g[2][2] - g[1][2]*g[1][2]) * det_inverse;
-        	g_UU[0][1] = (g[0][2]*g[1][2] - g[0][1]*g[2][2]) * det_inverse;
-        	g_UU[0][2] = (g[0][1]*g[1][2] - g[0][2]*g[1][1]) * det_inverse;
-        	g_UU[1][1] = (g[0][0]*g[2][2] - g[0][2]*g[0][2]) * det_inverse;
-        	g_UU[1][2] = (g[0][1]*g[0][2] - g[0][0]*g[1][2]) * det_inverse;
-        	g_UU[2][2] = (g[0][0]*g[1][1] - g[0][1]*g[0][1]) * det_inverse;
-        	g_UU[1][0] = g_UU[0][1];
-       		g_UU[2][0] = g_UU[0][2];
-        	g_UU[2][1] = g_UU[1][2];
-
+		g_UU = calculate_spatial_inverse(g);
 
 		dg = get_metric_deriv(M,v.x,v.y,v.z);
 				
@@ -199,5 +193,15 @@ class Black_Hole{
 
 		return out;
 		//return v.sqrt3(v)*t;
+	}
+
+	double calculate_norm(Vec3 v,double M = 1){
+		double norm = 0;
+                tensor<1,double> dx = {v.vx,v.vy,v.vz,v.vt};
+		tensor<2,double> g = get_metric(M,v.x,v.y,v.y);
+		FOR2(i,j){
+			norm += g[i][j]*dx[i]*dx[j];
+		}
+		return norm;
 	}
 };
