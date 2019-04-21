@@ -9,7 +9,7 @@
 # include <vector>
 # include <algorithm> 
 #include "tensor.hpp"
-#include "SchwarzSchild.hpp"
+#include "schwarzschild.hpp"
 using namespace std;
 
 
@@ -40,24 +40,30 @@ auto rk4(Vec3 f(double, Vec3))
 int main(void)
 {
 
-        const double TIME_MAXIMUM = 500.0, WHOLE_TOLERANCE = 1e-12 ;
-        const double T_START = 0.0, DT = 0.01;
-	const Vec3 Y_START(20.0, 4.0, 0.0, 0.0, -0.3, 0.00, 0.0, 1.0);
+        const double TIME_MAXIMUM = 200.0, WHOLE_TOLERANCE = 1e-12 ;
+        const double T_START = 0.0, DT = 0.001;
 	Black_Hole BH;
 
 	auto dy = rk4( BH.eval_diff_eqn ) ;
- 
-        Vec3 y = Y_START;
-	double t = T_START;
 
-	ofstream myfile("xpos.csv");
+        for(int i = 0;i<5;i++){			
 
-        while(t <= TIME_MAXIMUM) {
-  	  y = y + dy(t,y,DT) ; t += DT;			
-	  myfile << y.x <<"	" << y.y << "	" << y.z << "	" << y.t << "" <<  endl;
+		const Vec3 Y_START(20.0, 7.0+i/2., 0.0, 0.0, -0.3, 0.00, 0.0, -1.0);
+        	Vec3 y = Y_START;
+		double t = T_START;
+
+		cout << "Norm of vector "<< BH.calculate_norm(Y_START) << endl; 
+		ofstream myfile("xpos"+std::to_string(i)+".csv");
+
+        	while(t <= TIME_MAXIMUM) {
+  	  		y = y + dy(t,y,DT) ; t += DT;			
+
+			myfile << y.x <<"	" << y.y << "	" << y.z << "	" << y.t << "	" << BH.calculate_norm(y) <<   endl;
+		}
+
+		myfile.close();
+
 	}
-
-	myfile.close();
 
   	return 0;
 }

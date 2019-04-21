@@ -15,9 +15,9 @@ class Black_Hole{
 	private:
    	static tensor<2, double> get_metric( double M,  double x, double y, double z){
 
-                tensor<2,double> jacobian   = {};
-                tensor<2,double> g = {};
-                tensor<2,double> g_spher    = {};
+                tensor<2,double> jacobian;
+                tensor<2,double> g ;
+                tensor<2,double> g_spher ;
 
 		FOR2(i,j){
 			g[i][j] = 0;
