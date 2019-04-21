@@ -125,6 +125,29 @@ class Black_Hole{
                 return g;
         }
 
+	static tensor<3, double> get_metric_deriv(double M, double x,double y, double z){
+		
+		tensor<3,double> dg;
+		tensor<2,double> g ;
+		tensor<2,double> g_dx ;
+		tensor<2,double> g_dy ;
+		tensor<2,double> g_dz ;
+		double h = 0.00001;
+
+		g = get_metric(M,x,y,z);
+		g_dx = get_metric(M,x-h,y,z);
+		g_dy = get_metric(M,x,y-h,z);
+		g_dz = get_metric(M,x,y,z-h);
+
+		FOR2(i,j){
+			dg[i][j][0] = (g[i][j]-g_dx[i][j])/h;
+			dg[i][j][1] = (g[i][j]-g_dy[i][j])/h;
+			dg[i][j][2] = (g[i][j]-g_dz[i][j])/h;
+			dg[i][j][3] = 0;
+		}
+		return dg;
+		
+	}
 
 	public:	
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
@@ -169,7 +192,12 @@ class Black_Hole{
   		double cosphi = v.x/rho ; 
  	 	// sin(phi)
  		double sinphi = v.y/rho ; 
-
+		double eps = 0.001;
+		if(rr < 2*M+eps){
+			FOR1(i){ddx[i]=0;dx[i]=0;}
+			Vec3 out(dx[0],dx[1],dx[2],dx[3],ddx[0],ddx[1],ddx[2],ddx[3]);		
+			return out;
+		}
 		// ==================== 
 
 		dg_spher[0][0][0] = (-2.*M)/pow((-2.*M + rr),2.);
@@ -229,7 +257,8 @@ class Black_Hole{
 			dg[i][j][m] += dg_spher[k][l][n]*jacobian[k][i]*jacobian[l][j]*jacobian[n][m]; 
     		    } 			
   		}
-
+		dg = get_metric_deriv(M,v.x,v.y,v.z);
+				
 		//=========================
 
       		FOR3(i,j,k)
@@ -266,9 +295,9 @@ class Black_Hole{
 int main(void)
 {
 
-        const double TIME_MAXIMUM = 1000.0, WHOLE_TOLERANCE = 1e-12 ;
+        const double TIME_MAXIMUM = 500.0, WHOLE_TOLERANCE = 1e-12 ;
         const double T_START = 0.0, DT = 0.01;
-	const Vec3 Y_START(10.0, 0.0, 0.0, 0.0, 0.0, 0.34, 0.0, 1.0);
+	const Vec3 Y_START(20.0, 4.0, 0.0, 0.0, -0.3, 0.00, 0.0, 1.0);
 	Black_Hole BH;
 
         auto eval_solution = [               ](double t          )->double{ return pow(t*t+4,2)/16                   	; } ;
