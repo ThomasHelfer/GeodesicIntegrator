@@ -200,31 +200,8 @@ class Black_Hole{
 		}
 		// ==================== 
 
-		dg_spher[0][0][0] = (-2.*M)/pow((-2.*M + rr),2.);
-		dg_spher[1][1][0] = 2.*rr;
-		dg_spher[2][2][0] = 2.*rr*pow(sintheta,2);
-		dg_spher[3][3][0] = -2.*M/rr2;
-
-		dg_spher[2][2][1] = rr2*2.*sintheta*costheta;
-
-		jacobian[0][0] = v.x/rr ;  
-  		jacobian[1][0] = cosphi*v.z/rr2 ; 
-  		jacobian[2][0] = -v.y/rho2 ; 
-  		jacobian[0][1] = v.y/rr ; 
-  		jacobian[1][1] = sinphi*v.z/rr2 ; 
-  		jacobian[2][1] = v.x/rho2 ; 
-  		jacobian[0][2] = v.z/rr ; 
-  		jacobian[1][2] = -rho/rr2 ;  
-  		jacobian[2][2] = 0.0 ; 	
-  		jacobian[3][3] = 1.0 ; 	
-
-		// ====================
-
-
 		g  = get_metric(M,v.x,v.y,v.z);
 
-		
-		double unity[4][4] = {};
 	
 		double det = g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])-
                       g[0][1]*(g[2][2]*g[1][0]-g[1][2]*g[2][0])+
@@ -242,21 +219,7 @@ class Black_Hole{
        		g_UU[2][0] = g_UU[0][2];
         	g_UU[2][1] = g_UU[1][2];
 
-		FOR2(i,j)
-		{
-			FOR1(k)
-			{
-				unity[i][j] += g[i][k]*g_UU[k][j];
-			}
-		}
 
-
- 		FOR3(i,j,m)
-  		{  
-   		 FOR3(k,l,n){
-			dg[i][j][m] += dg_spher[k][l][n]*jacobian[k][i]*jacobian[l][j]*jacobian[n][m]; 
-    		    } 			
-  		}
 		dg = get_metric_deriv(M,v.x,v.y,v.z);
 				
 		//=========================
@@ -300,10 +263,6 @@ int main(void)
 	const Vec3 Y_START(20.0, 4.0, 0.0, 0.0, -0.3, 0.00, 0.0, 1.0);
 	Black_Hole BH;
 
-        auto eval_solution = [               ](double t          )->double{ return pow(t*t+4,2)/16                   	; } ;
-        auto find_error    = [eval_solution  ](double t, double y)->double{ return fabs(y-eval_solution(t))          	; } ;
-        auto is_whole      = [WHOLE_TOLERANCE](double t          )->bool  { return fabs(t-round(t)) < WHOLE_TOLERANCE	; } ;
-
 	auto dy = rk4( BH.eval_diff_eqn ) ;
  
         Vec3 y = Y_START;
@@ -312,15 +271,6 @@ int main(void)
 	ofstream myfile("xpos.csv");
 
         while(t <= TIME_MAXIMUM) {
-/*          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.x,find_error(t,y.x)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.y,find_error(t,y.y)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.z,find_error(t,y.z)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.t,find_error(t,y.t)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vx,find_error(t,y.vx)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vy,find_error(t,y.vy)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vz,find_error(t,y.vz)); }
-          if (is_whole(t)) { printf("y(%4.1f)\t=%12.6f \t error: %12.6e\n",t,y.vt,find_error(t,y.vt)); }
-*/
   	  y = y + dy(t,y,DT) ; t += DT;			
 	  myfile << y.x <<"	" << y.y << "	" << y.z << "	" << y.t << "" <<  endl;
 	}
