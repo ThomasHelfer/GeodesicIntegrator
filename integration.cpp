@@ -69,27 +69,96 @@ class Black_Hole{
 		cout << "-----------" <<endl;
 	}
 
+   	static tensor<2, double> get_metric( double M,  double x, double y, double z){
+
+                tensor<2,double> jacobian   = {};
+                tensor<2,double> g = {};
+                tensor<2,double> g_spher    = {};
+
+		FOR2(i,j){
+			g[i][j] = 0;
+			g_spher[i][j] = 0;
+			jacobian[i][j] = 0;
+		}
+
+                double rr2 =   pow(x,2)+ pow(y,2) + pow(z,2);
+                double rho2 =  pow(x,2)+ pow(y,2);
+
+                double rr = sqrt(rr2);
+                double rho = sqrt(rho2);
+                 // sinus(theta)
+                double sintheta = rho/rr;
+                double costheta = z/rr;
+                // cos(phi)
+                double cosphi = x/rho ;
+                // sin(phi)
+                double sinphi = y/rho ;
+
+                g_spher[0][0] = 1./(1.0 - 2.0*M/rr);
+                // Define theta theta component
+                g_spher[1][1] = rr2;
+                // Define phi phi component
+                g_spher[2][2] = rr2*pow(sintheta,2);
+                // Devine tt component
+                g_spher[3][3] = -(1. - 2.0*M/rr);
+
+                jacobian[0][0] = x/rr ;
+                jacobian[1][0] = cosphi*z/rr2 ;
+                jacobian[2][0] = -y/rho2 ;
+                jacobian[0][1] = y/rr ;
+                jacobian[1][1] = sinphi*z/rr2 ;
+                jacobian[2][1] = x/rho2 ;
+                jacobian[0][2] = z/rr ;
+                jacobian[1][2] = -rho/rr2 ;
+                jacobian[2][2] = 0.0 ;
+                jacobian[3][3] = 1.0 ;
+
+                // ====================
+
+                FOR2(i,j)
+                {
+                 FOR2(k,l){
+                        g[i][j] += g_spher[k][l]*jacobian[k][i]*jacobian[l][j];
+                    }
+                }
+
+                return g;
+        }
+
+
 	public:	
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
 
-		tensor<2, double> g = {};// Metric Index low low 
-		tensor<2, double> g_UU = {};
-
 		double M = 1;		
-		tensor<2,double> g_spher    = {};
-		tensor<2,double> g_spher_UU = {}; // Metix Index low low 
-		tensor<3,double> dg 	    = {}; //
-		tensor<3,double> dg_spher   = {}; //
-		tensor<3,double> chris_LLL  = {}; // Christoffel index low low low 
-		tensor<3,double> chris_ULL  = {}; // Christoffel index high low low 
-		tensor<2,double> jacobian   = {};
+ 	        tensor<2,double> g; // Metix Index low low
+                tensor<2,double> g_UU;
+                tensor<2,double> g_spher;
+                tensor<2,double> g_spher_UU; // Metix Index low low
+                tensor<3,double> dg; //
+                tensor<3,double> dg_spher; //
+                tensor<3,double> chris_LLL; // Christoffel index low low low
+                tensor<3,double> chris_ULL; // Christoffel index high low low
+                tensor<2,double> jacobian = {};
 
-		tensor<1,double> x 	 = {v.x,v.y,v.z,v.t};
-		tensor<1,double> dx 	 = {v.vx,v.vy,v.vz,v.vt};
-		tensor<1,double> ddx	 = {};
+                tensor<1,double> dx = {v.vx,v.vy,v.vz,v.vt};
+                tensor<1,double> ddx;
 
-		double rr2 =   pow(v.x,2)+ pow(v.y,2) + pow(v.z,2);
-  		double rho2 =  pow(v.x,2)+ pow(v.y,2);
+		FOR1(i){ddx[i] = 0;}
+		FOR2(i,j){
+			g[i][j] = 0;
+			g_UU[i][j] = 0;
+			g_spher_UU[i][j] = 0;
+			jacobian[i][j] = 0;
+		}
+		FOR3(i,j,k){
+			dg[i][j][k] = 0;
+			dg_spher[i][j][k] = 0;
+			chris_LLL[i][j][k] = 0;
+			chris_ULL[i][j][k] = 0;
+		}
+
+		double rr2 =   pow(v.x,2) + pow(v.y,2) + pow(v.z,2);
+  		double rho2 =  pow(v.x,2) + pow(v.y,2);
 
 		double rr = sqrt(rr2);
   		double rho = sqrt(rho2);
@@ -102,16 +171,6 @@ class Black_Hole{
  		double sinphi = v.y/rho ; 
 
 		// ==================== 
-
-		g_spher[0][0] = 1./(1.0 - 2.0*M/rr);
-  		// Define theta theta component 
-  		g_spher[1][1] = rr2;
-  		// Define phi phi component 
-  		g_spher[2][2] = rr2*pow(sintheta,2);
-		// Devine tt component 
-		g_spher[3][3] = -(1. - 2.0*M/rr);
-		
-		FOR1(i){g_spher_UU[i][i] = 1./g_spher[i][i];};
 
 		dg_spher[0][0][0] = (-2.*M)/pow((-2.*M + rr),2.);
 		dg_spher[1][1][0] = 2.*rr;
@@ -133,12 +192,10 @@ class Black_Hole{
 
 		// ====================
 
- 		FOR2(i,j)
-  		{  
-   		 FOR2(k,l){
-			g[i][j] += g_spher[k][l]*jacobian[k][i]*jacobian[l][j]; 
-    		    } 			
-  		}
+
+		g  = get_metric(M,v.x,v.y,v.z);
+
+		
 		double unity[4][4] = {};
 	
 		double det = g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])-
