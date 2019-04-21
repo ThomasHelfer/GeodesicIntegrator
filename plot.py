@@ -45,7 +45,10 @@ rc['legend.fontsize'] = F2
 # ===============================
 
 
-pos = np.loadtxt("xpos.csv",unpack=True)
+pos = np.loadtxt("xpos0.csv",unpack=True)
+pos1 = np.loadtxt("xpos1.csv",unpack=True)
+pos2 = np.loadtxt("xpos2.csv",unpack=True)
+pos3 = np.loadtxt("xpos3.csv",unpack=True)
 
 print(pos)
 mass = 1; 
@@ -54,24 +57,34 @@ x_horizon = 2*mass*np.sin(theta)
 y_horizon = 2*mass*np.cos(theta) 
 x_ISCO = 6*mass*np.sin(theta)
 y_ISCO = 6*mass*np.cos(theta)
+x_Photon = 3*mass*np.sin(theta)
+y_Photon = 3*mass*np.cos(theta)
 
 plt.figure(figsize=(14, 14), dpi=200)
 plt.plot(pos[0],pos[1],label = "Geodesic" )
+plt.plot(pos1[0],pos1[1] )
+plt.plot(pos2[0],pos2[1])
+plt.plot(pos3[0],pos3[1])
 plt.plot(x_horizon,y_horizon,label = 'horizon',color = 'black')
 plt.plot(x_ISCO,y_ISCO,label = 'ISCO')
+plt.plot(x_Photon,y_Photon,label = 'Photon Sphere')
 plt.xlabel(r'$x~[M^{-1}]$')
 plt.ylabel(r'$y~[M^{-1}]$')
 #plt.xlim(-40,max(time_2)/minit[1])
-#plt.xlim([-10,10])
-#plt.ylim([-10,10])
+plt.xlim([-20,20])
+plt.ylim([-20,20])
 plt.legend()
 plt.grid()
 plt.savefig("gedodesic.png",bbox_inches = 'tight')
 plt.close()
 
+refNorm = pos[4][0];
 
 plt.figure(figsize=(14, 14), dpi=200)
-plt.plot(pos[3],pos[1],label = "x position " )
+plt.plot(pos[3],pos[4],label = "x position " )
+plt.plot(pos1[3],pos1[4],label = "x position " )
+plt.plot(pos2[3],pos2[4],label = "x position " )
+plt.plot(pos3[3],pos3[4],label = "x position " )
 #plt.xlabel(r'$x/m_{init}$')
 #plt.ylabel(r'$r\psi_4 m_{init}$')
 #plt.xlim(-40,max(time_2)/minit[1])

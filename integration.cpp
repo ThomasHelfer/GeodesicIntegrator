@@ -10,6 +10,8 @@
 # include <algorithm> 
 #include "tensor.hpp"
 #include "schwarzschild.hpp"
+#include <ctime>
+
 using namespace std;
 
 
@@ -40,15 +42,15 @@ auto rk4(Vec3 f(double, Vec3))
 int main(void)
 {
 
-        const double TIME_MAXIMUM = 200.0, WHOLE_TOLERANCE = 1e-12 ;
-        const double T_START = 0.0, DT = 0.001;
+        const double TIME_MAXIMUM = 120.0, WHOLE_TOLERANCE = 1e-12 ;
+        const double T_START = 0.0, DT = 0.3;
 	Black_Hole BH;
 
 	auto dy = rk4( BH.eval_diff_eqn ) ;
 
         for(int i = 0;i<5;i++){			
 
-		const Vec3 Y_START(20.0, 7.0+i/2., 0.0, 0.0, -0.3, 0.00, 0.0, -1.0);
+		const Vec3 Y_START(100.0, 6.8+i/5., 0.0, 0.0, -1.0, 0.00, 0.0, -1.0);
         	Vec3 y = Y_START;
 		double t = T_START;
 
@@ -65,5 +67,53 @@ int main(void)
 
 	}
 
-  	return 0;
+
+  	const int H = 1000;
+  	const int W = 1000;
+	double max_x = 20;
+	double max_y = 20;
+
+	 std::clock_t start;
+	 double duration;
+
+  	std::ofstream out("out.ppm");
+  	out << "P3\n" << W << ' ' << H << ' ' << "255\n";
+
+	 for (int y1 = 0; y1 < H; ++y1) {
+		 start = std::clock();
+		 for (int x1 = 0; x1 < W; ++x1) {
+        		bool draw = true;
+			double x_shot = (double)x1/W*max_x-max_x/2.;
+			double y_shot = (double)y1/H*max_y-max_y/2.;
+			
+
+			const Vec3 Y_START(100.0, x_shot, y_shot, 0.0, -1.0, 0.00, 0.0, -1.0);
+        		Vec3 y = Y_START;
+			double t = T_START;
+	       		
+        		while((t <= TIME_MAXIMUM) && draw) {
+  	  			y = y + dy(t,y,DT) ; t += DT;
+				double rr = sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5;
+		
+				if( rr < 1 && abs(y.z) < 0.2){
+					  out << 0 << ' '
+		                              << 200 << ' '
+	                                      << 0 << '\n';				      
+					  draw = false;
+				}
+			}
+			if(draw){
+	   		    out << 0 << ' '
+        		    << 0 << ' '
+        		    << 0 << '\n';
+			}
+     	     }
+
+	     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+	     cout << " Completed = " <<  (double)y1/(double)H*100 << " % " << endl;	
+	     cout << " Estmated time to finish " << duration*(H-y1)/60.0 << " min " << endl;
+
+	 }
+
+	 return 0;
 }
