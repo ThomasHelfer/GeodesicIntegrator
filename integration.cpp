@@ -3,14 +3,16 @@
  * g++-mp-5 -std=c++14 -o rk4 rk4.cc
  *
  */
-# include <iostream>
+#include <iostream>
 #include <fstream>
-# include <math.h>
-# include <vector>
-# include <algorithm> 
+#include <math.h>
+#include <vector>
+#include <algorithm> 
+#include <ctime>
+#include "mpi.h"
+
 #include "tensor.hpp"
 #include "schwarzschild.hpp"
-#include <ctime>
 
 using namespace std;
 
@@ -67,6 +69,7 @@ int main(void)
 
 	}
 
+	MPI_Comm comm; 
 
   	const int H = 2000;
   	const int W = 2000;
