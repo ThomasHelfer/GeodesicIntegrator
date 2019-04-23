@@ -59,7 +59,9 @@ int main(void)
 	const double size_y = 20;
 	int pic[H*H] ; 
 
-	rend.picture(pic, size_x,size_y);	
+	const Vec3 center(100.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
+
+	rend.picture(pic,center, size_x,size_y);	
 
 	rend.render(pic,name_render);
 

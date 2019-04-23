@@ -4,7 +4,7 @@
 template <typename data_t>
 class render_black_hole{
         public:
-        int* picture(int* picture, double  max_x, double  max_y,
+        int* picture(int* picture, Vec3 center, double  max_x, double  max_y,
                       const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
                       const double T_START = 0){
 
@@ -23,12 +23,14 @@ class render_black_hole{
                                 double y_shot = (double)y1/H*max_y-max_y/2.;
 
 
-                                const Vec3 Y_START(100.0, x_shot, y_shot, 0.0, -1.0, 0.00, 0.0, -1.0);
+                                Vec3 Y_START(0.0, x_shot, y_shot, 0.0, 0.0, 0.00, 0.0, 0.0);
+				Y_START = Y_START + center ; 	
                                 Vec3 y = Y_START;
                                 double t = T_START;
 
                                 while((t <= TIME_MAXIMUM) && draw) {
                                         y = y + dy(t,y,DT) ; t += DT;
+
                                         double rr = abs(sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5);
 
                                         if( rr < 1 && abs(y.z) < 0.2){
