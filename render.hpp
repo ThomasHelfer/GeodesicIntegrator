@@ -5,7 +5,8 @@ template <typename data_t>
 class render_black_hole{
         public:
         int* picture(int* picture, Vec3 center, double  max_x, double  max_y,
-                      const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
+                      const int start_ind = 0, const int end_ind = (H*H), 
+    		      const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
                       const double T_START = 0){
 
                 data_t metric;
@@ -15,11 +16,11 @@ class render_black_hole{
 
                 auto dy = rk4( metric.eval_diff_eqn ) ;
 
-                for (int y1 = 0; y1 < H; ++y1) {
-                         start = std::clock();
-                         for (int x1 = 0; x1 < H; ++x1) {
+		for (int i = start_ind; i < end_ind; i++){
                                 bool draw = true;
-                                double x_shot = (double)x1/H*max_x-max_x/2.;
+				int x1 = i % H;
+				int y1 = (i - x1)/H;
+ 				double x_shot = (double)x1/H*max_x-max_x/2.;
                                 double y_shot = (double)y1/H*max_y-max_y/2.;
 
 
@@ -34,22 +35,25 @@ class render_black_hole{
                                         double rr = abs(sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5);
 
                                         if( rr < 1 && abs(y.z) < 0.2){
-                                                picture[y1*H+x1] = (int)(rr*255);
+                                                picture[i] = (int)(rr*255);
                                                 draw = false;
                                         }
                                 }
                                 if(draw){
-                                        picture[y1*H+x1] = 0;
+                                        picture[i] = 0;
                                 }
-                        }
 
-                        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+                }
+
+/*
+                        start = std::clock();
+   			duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
                         cout << " Completed = " <<  (double)y1/(double)H*100 << " % " << endl;
                         cout << " duration " << duration << " sec" <<endl;
                         cout << " Estmated time to finish " << (double)duration*((double)H-(double)y1)/60.0 << " min " << endl;
-
-                }
-                return picture;
+*/
+			return picture;
         }
 
        void render(int *picture, char file_name[]){
