@@ -47,7 +47,7 @@ int main(void)
 
 	// ========== Main CODE =================
 	int i = 0;	
-	for(alpha = 0; alpha < M_PI; alpha += M_PI/500.){
+	for(alpha = 0; alpha < M_PI/2.; alpha += M_PI/(2.*50.)){
 		string imgname="Image_";
 		char cbuff[20];
 		sprintf (cbuff, "%03d", i);
@@ -55,7 +55,7 @@ int main(void)
 		imgname.append(".ppm");	
 
 		const Vec3 center(100.0*cos(alpha), 0.0, 100*sin(alpha), 0.0, -1.0*cos(alpha), 0.0, -1.0*sin(alpha), 1.0); // Set Up center and viewing angle
-		rend.picture(pic_local,center, size_x,size_y, rank*size_per_task , size_per_task*(rank+1));	
+		rend.picture(pic_local,center, size_x,size_y,alpha, rank*size_per_task , size_per_task*(rank+1));	
 		if(rank==0){ cout << imgname <<  endl;}
 
 		// --------- MPI communication ------------

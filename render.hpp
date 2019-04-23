@@ -1,10 +1,11 @@
 
-# define H 500
+# define H 50
 
 template <typename data_t>
 class render_black_hole{
         public:
         int* picture(int* picture, Vec3 center, double  max_x, double  max_y,
+		      const double alpha,
                       const int start_ind = 0, int end_ind = (H*H), 
     		      const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
                       const double T_START = 0){
@@ -26,7 +27,7 @@ class render_black_hole{
                                 double y_shot = (double)y1/H*max_y-max_y/2.;
 
 
-                                Vec3 Y_START(0.0, x_shot, y_shot, 0.0, 0.0, 0.00, 0.0, 0.0);
+                                Vec3 Y_START(-y_shot*sin(alpha), x_shot, y_shot*cos(alpha), 0.0, 0.0, 0.00, 0.0, 0.0);
 				Y_START = Y_START + center ; 	
                                 Vec3 y = Y_START;
                                 double t = T_START;
