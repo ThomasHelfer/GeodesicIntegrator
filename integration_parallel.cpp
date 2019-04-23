@@ -29,35 +29,48 @@ int main(void)
 	int numtasks, rank, sendcount, recvcount, source;
 	int size_per_task;
 
-
+	// ============= MPI INIT ================
  	MPI_Init(NULL,NULL);
  	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
  	MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
+	size_per_task = (int)ceil(H*H/(double)numtasks);
+	// ============= DEFINITIONS ==============
 
  	char name_render[] = "out.ppm";	
 	render_black_hole<Black_Hole> rend;
 	const double size_x = 20;
 	const double size_y = 20;
+	double alpha = 0;
 	
-	size_per_task = (int)ceil(H*H/(double)numtasks);
-	cout << size_per_task << endl;
-
 	int* pic_local = (int *)malloc(sizeof(int) * size_per_task);
-
 	int* pic = (int *)malloc(sizeof(int) * size_per_task * numtasks);
 
-	const Vec3 center(100.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
+	// ========== Main CODE =================
+	int i = 0;	
+	for(alpha = 0; alpha < M_PI; alpha += M_PI/500.){
+		string imgname="Image_";
+		char cbuff[20];
+		sprintf (cbuff, "%03d", i);
+		imgname.append(cbuff);
+		imgname.append(".ppm");	
 
-	rend.picture(pic_local,center, size_x,size_y, rank*size_per_task , size_per_task*(rank+1));	
+		const Vec3 center(100.0*cos(alpha), 0.0, 100*sin(alpha), 0.0, -1.0*cos(alpha), 0.0, -1.0*sin(alpha), 1.0); // Set Up center and viewing angle
+		rend.picture(pic_local,center, size_x,size_y, rank*size_per_task , size_per_task*(rank+1));	
+		if(rank==0){ cout << imgname <<  endl;}
 
-	MPI_Gather(pic_local, size_per_task, MPI_INT, pic , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
+		// --------- MPI communication ------------
+		MPI_Gather(pic_local, size_per_task, MPI_INT, pic , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
 
-	if(rank==0){rend.render(pic,name_render);}
-/*
+		// ---------- Write out data --------------
+		if(rank==0){rend.render(pic,imgname);}
+	
+		i++;
+	}
+	// =========== Clean up =================
 	free(pic_local);
-	free(pic);
-*/
-	 MPI_Finalize();
+ 	free(pic);
 
-	 return 0;
+	MPI_Finalize();
+
+	return 0;
 }
