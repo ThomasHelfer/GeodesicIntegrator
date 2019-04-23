@@ -23,9 +23,6 @@ using namespace std;
 #define FOR4(IDX1,IDX2,IDX3,IDX4) FOR2(IDX1,IDX2) FOR2(IDX3,IDX4)
 
 
-
-
-
 int main(void)
 {
 
@@ -60,7 +57,7 @@ int main(void)
 	render_black_hole<Black_Hole> rend;
 	const double size_x = 20;
 	const double size_y = 20;
-	bool pic[H*H] ; 
+	int pic[H*H] ; 
 
 	rend.picture(pic, size_x,size_y);	
 

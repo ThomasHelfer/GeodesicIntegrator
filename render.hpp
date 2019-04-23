@@ -4,7 +4,7 @@
 template <typename data_t>
 class render_black_hole{
         public:
-        bool* picture(bool* picture, double  max_x, double  max_y,
+        int* picture(int* picture, double  max_x, double  max_y,
                       const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
                       const double T_START = 0){
 
@@ -29,15 +29,15 @@ class render_black_hole{
 
                                 while((t <= TIME_MAXIMUM) && draw) {
                                         y = y + dy(t,y,DT) ; t += DT;
-                                        double rr = sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5;
+                                        double rr = abs(sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5);
 
                                         if( rr < 1 && abs(y.z) < 0.2){
-                                                picture[y1*H+x1] = true;
+                                                picture[y1*H+x1] = (int)(rr*255);
                                                 draw = false;
                                         }
                                 }
                                 if(draw){
-                                        picture[y1*H+x1] = false;
+                                        picture[y1*H+x1] = 0;
                                 }
                         }
 
@@ -50,20 +50,24 @@ class render_black_hole{
                 return picture;
         }
 
-       void render(bool *picture, char file_name[]){
+       void render(int *picture, char file_name[]){
           std::ofstream out("out.ppm");
           out << "P3\n" << H << ' ' << H << ' ' << "255\n";
 
           for(int i = 0; i < H*H; i++){
-                if(picture[i]){
-                            out << 0 << ' '
-                            << 255 << ' '
-                            << 0 << '\n';
-                }else{
-                         out << 0 << ' '
+		  	   if(picture[i] != 0){
+			   int red =  picture[i];
+			   int blue = abs(255-picture[i]);
+			   //cout << red << endl;
+			   out << red << ' '
                             << 0 << ' '
-                            << 0 << '\n';
-                }
+                           << blue << '\n';
+			   } else {
+
+			   out << 0 << ' '
+                               << 0 << ' '
+                               << 0 << '\n';
+			   }
           }
         }
 };
