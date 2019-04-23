@@ -1,28 +1,36 @@
 #include <mpi.h>
 #include <stdio.h>
+#include <stdlib.h>  
+#include <iostream>
+#include <fstream>
+#define SIZE 4
+#define W 100
 
-int main(int argc, char** argv) {
-    // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
+int main() {
+int numtasks, rank, sendcount, recvcount, source;
+int size_per_task; 
 
-    // Get the number of processes
-    int world_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+ float* sendbuf = (float *)malloc(sizeof(float) * SIZE); 
 
-    // Get the rank of the process
-    int world_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+ MPI_Init(NULL,NULL);
+ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+ MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
 
-    // Get the name of the processor
-    char processor_name[MPI_MAX_PROCESSOR_NAME];
-    int name_len;
-    MPI_Get_processor_name(processor_name, &name_len);
+ float rank1[SIZE*SIZE];
 
-    // Print off a hello world message
-    printf("Hello world from processor %s, rank %d out of %d processors\n",
-           processor_name, world_rank, world_size);
+  for(int i = 0; i < SIZE; i++ ){sendbuf[i] = rank;}
 
-    // Finalize the MPI environment.
-    MPI_Finalize();
+	
+  MPI_Gather(sendbuf, 4, MPI_FLOAT, rank1 , 4, MPI_FLOAT, 0, MPI_COMM_WORLD);
+  
+  
+  if(rank == 0)
+   for(int i = 0; i < SIZE*SIZE; i++){
+    printf("%f\n",rank1[i]);
+   }
+  
+  free(sendbuf);
+
+  MPI_Finalize();
 }
 

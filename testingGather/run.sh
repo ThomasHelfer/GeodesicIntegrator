@@ -1,2 +1,2 @@
-mpic++ test.cpp
-mpirun -n 2 ./a.out
+mpicc test.cpp
+mpirun -n 4 ./a.out
