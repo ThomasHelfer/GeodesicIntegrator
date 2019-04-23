@@ -21,7 +21,8 @@ class render_black_hole{
                                 bool draw = true;
 				int x1 = i % H;
 				int y1 = (i - x1)/H;
- 				double x_shot = (double)x1/H*max_x-max_x/2.;
+ 				int i_local = i - start_ind;
+				double x_shot = (double)x1/H*max_x-max_x/2.;
                                 double y_shot = (double)y1/H*max_y-max_y/2.;
 
 
@@ -36,12 +37,12 @@ class render_black_hole{
                                         double rr = abs(sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5);
 
                                         if( rr < 1 && abs(y.z) < 0.2){
-                                                picture[i] = (int)(rr*255);
+                                                picture[i_local] = (int)(rr*255);
                                                 draw = false;
                                         }
                                 }
                                 if(draw){
-                                        picture[i] = 0;
+                                        picture[i_local] = 0;
                                 }
 
 

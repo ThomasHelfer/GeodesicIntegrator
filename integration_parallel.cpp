@@ -52,10 +52,12 @@ int main(void)
 
 	MPI_Gather(pic_local, size_per_task, MPI_INT, pic , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
 
-	rend.render(pic,name_render);
+	if(rank==0){rend.render(pic,name_render);}
 /*
 	free(pic_local);
 	free(pic);
 */
+	 MPI_Finalize();
+
 	 return 0;
 }
