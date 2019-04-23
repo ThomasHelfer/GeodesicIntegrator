@@ -1,3 +1,5 @@
 mpicc -std=c++14 integration_parallel.cpp
-mpirun -n 3 ./a.out
-convert out.ppm out.png
+mpirun -n 32 ./a.out
+for f in Image*.ppm; do
+  convert ./"$f" ./"${f%.ppm}.png"
+done
