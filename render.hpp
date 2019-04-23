@@ -1,5 +1,5 @@
 
-# define H 50
+# define H 500
 
 template <typename data_t>
 class render_black_hole{
@@ -58,8 +58,8 @@ class render_black_hole{
 			return picture;
         }
 
-       void render(int *picture, char file_name[]){
-          std::ofstream out("out.ppm");
+       void render(int *picture, string file_name){
+          std::ofstream out(file_name);
           out << "P3\n" << H << ' ' << H << ' ' << "255\n";
 
           for(int i = 0; i < H*H; i++){

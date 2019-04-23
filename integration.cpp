@@ -53,7 +53,7 @@ int main(void)
 
 
 
- 	char name_render[] = "out.ppm";	
+ 	string name_render = "out.ppm";	
 	render_black_hole<Black_Hole> rend;
 	const double size_x = 20;
 	const double size_y = 20;
