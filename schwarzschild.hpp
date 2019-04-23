@@ -93,8 +93,13 @@ class Black_Hole{
 		
 	}
 
+	// Calculate inverse, only true for this metric, not a general 4x4 inversion 
 	static tensor<2,double > calculate_spatial_inverse(tensor<2,double> g){
 		tensor<2,double> g_UU;
+
+		FOR2(i,j){
+			g_UU[i][j] = 0;
+		}
 
 		double det = g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])-
                       g[0][1]*(g[2][2]*g[1][0]-g[1][2]*g[2][0])+
@@ -111,6 +116,9 @@ class Black_Hole{
         	g_UU[1][0] = g_UU[0][1];
        		g_UU[2][0] = g_UU[0][2];
         	g_UU[2][1] = g_UU[1][2];
+
+		g_UU[3][3] = 1.0/g[3][3];
+
 		return g_UU;
 	}
 
@@ -153,6 +161,8 @@ class Black_Hole{
  	 	// sin(phi)
  		double sinphi = v.y/rho ; 
 		double eps = 0.01;
+
+		//Freezing out geodesics that are too close to Horizon (Metric is singular at horizon)
 		if(rr < 2*M+eps){
 			FOR1(i){ddx[i]=0;dx[i]=0;}
 			Vec3 out(dx[0],dx[1],dx[2],dx[3],ddx[0],ddx[1],ddx[2],ddx[3]);		
@@ -198,7 +208,8 @@ class Black_Hole{
 	double calculate_norm(Vec3 v,double M = 1){
 		double norm = 0;
                 tensor<1,double> dx = {v.vx,v.vy,v.vz,v.vt};
-		tensor<2,double> g = get_metric(M,v.x,v.y,v.y);
+		tensor<2,double> g = get_metric(M,v.x,v.y,v.z);
+
 		FOR2(i,j){
 			norm += g[i][j]*dx[i]*dx[j];
 		}

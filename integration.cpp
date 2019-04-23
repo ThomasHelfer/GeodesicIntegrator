@@ -34,7 +34,7 @@ int main(void)
 
         for(int i = 0;i<5;i++){			
 
-		const Vec3 Y_START(100.0, 2.6+i/5., 0.0, 0.0, -1.0, 0.00, 0.0, -1.0);
+		const Vec3 Y_START(100.0, 7+i/5., 0.0, 0.0, -1.0, 0.00, 0.0, -1.0);
         	Vec3 y = Y_START;
 		double t = T_START;
 
@@ -61,7 +61,7 @@ int main(void)
 
 	const Vec3 center(100.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
 
-	rend.picture(pic,center, size_x,size_y);	
+	rend.picture(pic,center,size_x,size_y);	
 
 	rend.render(pic,name_render);
 
