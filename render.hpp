@@ -5,7 +5,7 @@ template <typename data_t>
 class render_black_hole{
         public:
         int* picture(int* picture, Vec3 center, double  max_x, double  max_y,
-                      const int start_ind = 0, const int end_ind = (H*H), 
+                      const int start_ind = 0, int end_ind = (H*H), 
     		      const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
                       const double T_START = 0){
 
@@ -15,6 +15,7 @@ class render_black_hole{
 
 
                 auto dy = rk4( metric.eval_diff_eqn ) ;
+		if(end_ind > H*H) { end_ind = H*H ;} 
 
 		for (int i = start_ind; i < end_ind; i++){
                                 bool draw = true;
