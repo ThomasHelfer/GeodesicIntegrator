@@ -45,10 +45,10 @@ rc['legend.fontsize'] = F2
 # ===============================
 
 
-pos = np.loadtxt("xpos0.csv",unpack=True)
-pos1 = np.loadtxt("xpos1.csv",unpack=True)
-pos2 = np.loadtxt("xpos2.csv",unpack=True)
-pos3 = np.loadtxt("xpos3.csv",unpack=True)
+pos = np.loadtxt("xpos000.csv",unpack=True)
+pos1 = np.loadtxt("xpos001.csv",unpack=True)
+pos2 = np.loadtxt("xpos002.csv",unpack=True)
+pos3 = np.loadtxt("xpos003.csv",unpack=True)
 
 print(pos)
 mass = 1; 
@@ -89,7 +89,7 @@ plt.plot(pos3[3],pos3[4],label = "x position " )
 #plt.ylabel(r'$r\psi_4 m_{init}$')
 #plt.xlim(-40,max(time_2)/minit[1])
 #plt.xlim([-10,10])
-#plt.ylim([-10,10])
+plt.ylim([-1,1])
 plt.legend()
 plt.grid()
 plt.savefig("time_xpos.png",bbox_inches = 'tight')
