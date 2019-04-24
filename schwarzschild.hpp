@@ -93,6 +93,7 @@ class Black_Hole{
 		
 	}
 
+
 	// Calculate inverse, only true for this metric, not a general 4x4 inversion 
 	static tensor<2,double > calculate_spatial_inverse(tensor<2,double> g){
 		tensor<2,double> g_UU;
@@ -122,6 +123,34 @@ class Black_Hole{
 		return g_UU;
 	}
 
+	static tensor<3,double> get_chris( tensor<2,double> g_UU, tensor<3,double> dg){
+		
+		// Init 
+                tensor<3,double> chris_LLL; // Christoffel index low low low
+                tensor<3,double> chris_ULL; // Christoffel index high low low
+	
+		FOR3(i,j,k){
+			chris_LLL[i][j][k] = 0;
+			chris_ULL[i][j][k] = 0;
+		}
+		// Calculation of Christoffel symbols 
+      		FOR3(i,j,k)
+        	{
+            		chris_LLL[i][j][k] = 0.5*(dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
+        	}
+        	FOR3(i,j,k)
+        	{
+            		chris_ULL[i][j][k] = 0;
+            		FOR1(l)
+            		{
+                 		chris_ULL[i][j][k] += g_UU[i][l]*chris_LLL[l][j][k];
+            		}
+        	}
+
+		return chris_ULL;
+
+	}
+
 	public:	
 	static Vec3 eval_diff_eqn(double t, Vec3 v){
 
@@ -129,7 +158,6 @@ class Black_Hole{
  	        tensor<2,double> g; // Metix Index low low
                 tensor<2,double> g_UU;
                 tensor<3,double> dg; //
-                tensor<3,double> chris_LLL; // Christoffel index low low low
                 tensor<3,double> chris_ULL; // Christoffel index high low low
                 tensor<2,double> jacobian = {};
 
@@ -144,8 +172,6 @@ class Black_Hole{
 		}
 		FOR3(i,j,k){
 			dg[i][j][k] = 0;
-			chris_LLL[i][j][k] = 0;
-			chris_ULL[i][j][k] = 0;
 		}
 
 		double rr2 =   pow(v.x,2) + pow(v.y,2) + pow(v.z,2);
@@ -178,18 +204,7 @@ class Black_Hole{
 				
 		//=========================
 
-      		FOR3(i,j,k)
-        	{
-            		chris_LLL[i][j][k] = 0.5*(dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
-        	}
-        	FOR3(i,j,k)
-        	{
-            		chris_ULL[i][j][k] = 0;
-            		FOR1(l)
-            		{
-                 		chris_ULL[i][j][k] += g_UU[i][l]*chris_LLL[l][j][k];
-            		}
-        	}
+        	chris_ULL = get_chris(g_UU,dg);
 		
 		//=========================
 
