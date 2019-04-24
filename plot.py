@@ -13,7 +13,7 @@ import matplotlib.collections as collections
 from scipy.interpolate import interp1d
 from scipy.optimize import fsolve
 from scipy.optimize import curve_fit
-
+import os
 
 # ============================
 #  Doddy defintions
@@ -38,19 +38,23 @@ rc['xtick.labelsize'] = 'small'
 rc['ytick.labelsize'] = 'small'
 rc['legend.fontsize'] = F2
 
-# Set a color stucture
+# ==============================
+# Read - in 
+# ==============================
+
+i = 0 
+data = []
+filename = "xpos" + str(i).zfill(3)+".csv"
+print(filename)
+while(os.path.isfile(filename)):
+    data.append(np.loadtxt(filename,unpack=True))
+    i = i + 1 
+    filename = "xpos" + str(i).zfill(3)+".csv"
 
 # ===============================
 # Defs 
 # ===============================
 
-
-pos = np.loadtxt("xpos000.csv",unpack=True)
-pos1 = np.loadtxt("xpos001.csv",unpack=True)
-pos2 = np.loadtxt("xpos002.csv",unpack=True)
-pos3 = np.loadtxt("xpos003.csv",unpack=True)
-
-print(pos)
 mass = 1; 
 theta = np.linspace(0,2*np.pi,100);
 x_horizon = 2*mass*np.sin(theta)
@@ -60,17 +64,18 @@ y_ISCO = 6*mass*np.cos(theta)
 x_Photon = 3*mass*np.sin(theta)
 y_Photon = 3*mass*np.cos(theta)
 
+# ================= Plotting ========================
+
+print("Plotting geodesics ")
+
 plt.figure(figsize=(14, 14), dpi=200)
-plt.plot(pos[0],pos[1],label = "Geodesic" )
-plt.plot(pos1[0],pos1[1] )
-plt.plot(pos2[0],pos2[1])
-plt.plot(pos3[0],pos3[1])
 plt.plot(x_horizon,y_horizon,label = 'horizon',color = 'black')
 plt.plot(x_ISCO,y_ISCO,label = 'ISCO')
 plt.plot(x_Photon,y_Photon,label = 'Photon Sphere')
+for pos in data:
+    plt.plot(pos[0],pos[1])
 plt.xlabel(r'$x~[M^{-1}]$')
 plt.ylabel(r'$y~[M^{-1}]$')
-#plt.xlim(-40,max(time_2)/minit[1])
 plt.xlim([-20,20])
 plt.ylim([-20,20])
 plt.legend()
@@ -81,12 +86,10 @@ plt.close()
 refNorm = pos[4][0];
 
 plt.figure(figsize=(14, 14), dpi=200)
-plt.plot(pos[3],pos[4],label = "x position " )
-plt.plot(pos1[3],pos1[4],label = "x position " )
-plt.plot(pos2[3],pos2[4],label = "x position " )
-plt.plot(pos3[3],pos3[4],label = "x position " )
-#plt.xlabel(r'$x/m_{init}$')
-#plt.ylabel(r'$r\psi_4 m_{init}$')
+for pos in data:
+    plt.plot(pos[3],pos[4])
+plt.xlabel(r'$t~[M^{-1}]$')
+plt.ylabel(r'$||\partial x/ \partial \tau ||$')
 #plt.xlim(-40,max(time_2)/minit[1])
 #plt.xlim([-10,10])
 plt.ylim([-1,1])

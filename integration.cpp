@@ -28,7 +28,7 @@ int main(void)
 	// Setting up inital data
 		
 	double center_x = 100;
-	double center_y = 4.6;
+	double center_y = 2;
 	double center_z = 0.0;
 	double start_time = 0.0;
 	double velocity_x = -1.0;
@@ -43,7 +43,7 @@ int main(void)
 
 	geodesic_shooter<Black_Hole> pewpew;
 		
-	pewpew.shoot(initial_data);
+	pewpew.shoot(initial_data,0.3,50);
 
 
  	string name_render = "out.ppm";	
