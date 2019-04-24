@@ -87,12 +87,13 @@ refNorm = pos[4][0];
 
 plt.figure(figsize=(14, 14), dpi=200)
 for pos in data:
-    plt.plot(pos[3],pos[4])
+    ref = pos[4][0]
+    plt.plot(pos[3],abs(pos[4]-ref)/ref*100)
 plt.xlabel(r'$t~[M^{-1}]$')
 plt.ylabel(r'$||\partial x/ \partial \tau ||$')
 #plt.xlim(-40,max(time_2)/minit[1])
 #plt.xlim([-10,10])
-plt.ylim([-1,1])
+#plt.ylim([-1,1])
 plt.legend()
 plt.grid()
 plt.savefig("time_xpos.png",bbox_inches = 'tight')
