@@ -41,13 +41,16 @@ int main(void)
 	const double size_x = 20;
 	const double size_y = 20;
 	double alpha = 0;
-	
+	double t1,t2;	
+
 	int* pic_local = (int *)malloc(sizeof(int) * size_per_task);
 	int* pic = (int *)malloc(sizeof(int) * size_per_task * numtasks);
 
 	// ========== Main CODE =================
 	int i = 0;	
 	for(alpha = 0; alpha < M_PI/2.; alpha += M_PI/(2.*50.)){
+
+		t1 = MPI_Wtime();
 		string imgname="Image_";
 		char cbuff[20];
 		sprintf (cbuff, "%03d", i);
@@ -63,7 +66,11 @@ int main(void)
 
 		// ---------- Write out data --------------
 		if(rank==0){rend.render(pic,imgname);}
-	
+
+
+		t2 = MPI_Wtime();
+                if (rank ==0) {cout << "duration per frame " << t2-t1 << "sec" << endl; }
+			
 		i++;
 	}
 	// =========== Clean up =================
