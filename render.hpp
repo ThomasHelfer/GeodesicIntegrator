@@ -30,7 +30,8 @@ class render_black_hole{
                                 Vec3 Y_START(-y_shot*sin(alpha), x_shot, y_shot*cos(alpha), 0.0, 0.0, 0.00, 0.0, 0.0);
 				Y_START = Y_START + center ; 	
                                 Vec3 y = Y_START;
-                                double t = T_START;
+                		y = metric.set_norm(y,0);
+       				double t = T_START;
 
                                 while((t <= TIME_MAXIMUM) && draw) {
                                         y = y + dy(t,y,DT) ; t += DT;
