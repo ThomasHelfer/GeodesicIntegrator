@@ -1,5 +1,5 @@
 
-# define H 10
+# define H 100
 
 template <typename data_t>
 class render_black_hole{
@@ -69,9 +69,9 @@ class render_black_hole{
 			   int red =  picture[i];
 			   int blue = abs(255-picture[i]);
 			   //cout << red << endl;
-			   out << red << ' '
-                            << 0 << ' '
-                           << blue << '\n';
+			   out << 255 << ' '
+                            << blue << ' '
+                           << 0 << '\n';
 			   } else {
 
 			   out << 0 << ' '
