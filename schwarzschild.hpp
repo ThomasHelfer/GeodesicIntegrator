@@ -76,7 +76,7 @@ class Black_Hole{
 		tensor<2,double> g_dx ;
 		tensor<2,double> g_dy ;
 		tensor<2,double> g_dz ;
-		double h = 1e-7;
+		double h = 1e-8;
 
 		g = get_metric(M,x,y,z);
 		g_dx = get_metric(M,x-h,y,z);
@@ -186,7 +186,7 @@ class Black_Hole{
   		double cosphi = v.x/rho ; 
  	 	// sin(phi)
  		double sinphi = v.y/rho ; 
-		double eps = 1e-6;
+		double eps = 1e-7;
 
 		//Freezing out geodesics that are too close to Horizon (Metric is singular at horizon)
 		if(rr < 2*M+eps){
@@ -229,5 +229,16 @@ class Black_Hole{
 			norm += g[i][j]*dx[i]*dx[j];
 		}
 		return norm;
+	
+	}
+	// Change the vt component to set norm to any value 
+	Vec3 set_norm(Vec3 v, double norm_val=0, double M =1){
+		double norm = calculate_norm(v);
+		tensor<1,double> dx = {v.vx,v.vy,v.vz,v.vt};
+		tensor<2,double> g = get_metric(M,v.x,v.y,v.z);
+
+		double tmp = norm - g[3][3]*dx[3]*dx[3];
+		v.vt = sqrt(1.0/g[3][3]*(norm_val-tmp));
+		return v;
 	}
 };
