@@ -11,7 +11,7 @@ class geodesic_shooter{
 
                 for(int i = 0; i<shoot ; i++){
 
-                        const Vec3 Y_START(0.0, 7+i/5., 0.0, 0.0, -1.0, 0.00, 0.0, -1.0);
+                        const Vec3 Y_START(0.0, i*shift, 0.0, 0.0, -1.0, 0.00, 0.0, -1.0);
                         Vec3 y = Y_START + center;
                         double t = T_START;
 
