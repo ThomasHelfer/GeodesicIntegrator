@@ -8,16 +8,16 @@ using namespace std;
 #define FOR3(IDX1,IDX2,IDX3) FOR2(IDX1,IDX2) FOR1(IDX3)
 #define FOR4(IDX1,IDX2,IDX3,IDX4) FOR2(IDX1,IDX2) FOR2(IDX3,IDX4)
 
+#define column_max 8 
+#define row_max 2600
+#define spacing 0.01
 
 class Oscilloton{
 
-    	const  int m_column_max = 8 ;
-	const static int m_row_max = 2600;
-
-    	double a202[m_row_max][8]; // a_j
-    	double c202[m_row_max][8]; // c_j
-    	double phi202[m_row_max][7]; // phi_j
-	double m_omega; 
+	public: 
+    	static double a202[row_max][8]; // a_j
+    	static double c202[row_max][8]; // c_j
+	static double m_omega; 
 
 	private:
    	static tensor<2, double> get_metric( double M,  double x, double y, double z){
@@ -45,13 +45,26 @@ class Oscilloton{
                 // sin(phi)
                 double sinphi = y/rho ;
 
-                g_spher[0][0] = 1./(1.0 - 2.0*M/rr);
+		double A = 0;
+		double C = 0;
+		double t = 0;
+		if(rr < spacing*row_max){	
+			for(int i=1; i<8;i++){
+      					A += get_a202(rr,i)*cos((2*i)*m_omega*t);
+      					C += get_c202(rr,i)*cos((2*i)*m_omega*t);
+    			}
+		}else{
+			A = 1;
+			C = 1;
+		}
+
+                g_spher[0][0] = A;
                 // Define theta theta component
                 g_spher[1][1] = rr2;
                 // Define phi phi component
                 g_spher[2][2] = rr2*pow(sintheta,2);
                 // Devine tt component
-                g_spher[3][3] = -(1. - 2.0*M/rr);
+                g_spher[3][3] = -A/C;
 
                 jacobian[0][0] = x/rr ;
                 jacobian[1][0] = cosphi*z/rr2 ;
@@ -164,17 +177,14 @@ class Oscilloton{
 	Oscilloton(){
 	 	ifstream ifs ("Oscilloton_data/general_a202.dat");
 	        ifstream ifs2 ("Oscilloton_data/general_c202.dat");
-	        ifstream ifs3 ("Oscilloton_data/general_phi202.dat");
 
-		for (int i = 0; i < m_row_max; ++i){
-    			for (int j=0; j < m_column_max; j++){
+		for (int i = 0; i < row_max; ++i){
+    			for (int j=0; j < column_max; j++){
         			ifs >> a202[i][j];
         			ifs2 >> c202[i][j];
-       				ifs3 >> phi202[i][j];
     			}
   		}
-		
-		m_omega = sqrt(c202[m_row_max-1][1])/a202[m_row_max-1][1];	
+		m_omega = sqrt(c202[row_max-1][1])/a202[row_max-1][1];	
 	}
 
 
@@ -212,14 +222,7 @@ class Oscilloton{
   		double cosphi = v.x/rho ; 
  	 	// sin(phi)
  		double sinphi = v.y/rho ; 
-		double eps = 1e-7;
 
-		//Freezing out geodesics that are too close to Horizon (Metric is singular at horizon)
-		if(rr < 2*M+eps){
-			FOR1(i){ddx[i]=0;dx[i]=0;}
-			Vec3 out(dx[0],dx[1],dx[2],dx[3],ddx[0],ddx[1],ddx[2],ddx[3]);		
-			return out;
-		}
 		// ==================== 
 
 		g  = get_metric(M,v.x,v.y,v.z);
@@ -267,4 +270,36 @@ class Oscilloton{
 		v.vt = sqrt(1.0/g[3][3]*(norm_val-tmp));
 		return v;
 	}
+	
+	static double get_a202(double rr, int component) {
+
+  		int indxL = static_cast<int>(floor(rr/spacing));
+  		int indxH = static_cast<int>(ceil(rr/spacing));
+
+  		double data_L = a202[indxL][component];
+  		double data_H = a202[indxH][component];
+
+  		double out =  data_L+ (rr/spacing - indxL) * (data_H - data_L);
+
+ 		 return out;
+	}
+	
+	
+	static double get_c202(double rr, int component) {
+
+  		int indxL = static_cast<int>(floor(rr/spacing));
+  		int indxH = static_cast<int>(ceil(rr/spacing));
+
+  		double data_L = c202[indxL][component];
+  		double data_H = c202[indxH][component];
+
+  		double out =  data_L + (rr/spacing - indxL) * (data_H - data_L);
+
+ 		 return out;
+	}
+
 };
+
+double  Oscilloton::a202[row_max][8]; 
+double  Oscilloton::c202[row_max][8];
+double  Oscilloton::m_omega;

@@ -15,6 +15,7 @@
 #include "rk4.hpp"
 #include "render.hpp"
 #include "geodesic_shooter.hpp"
+#include "Oscilloton.hpp"
 
 using namespace std;
 
@@ -23,12 +24,13 @@ using namespace std;
 #define FOR3(IDX1,IDX2,IDX3) FOR2(IDX1,IDX2) FOR1(IDX3)
 #define FOR4(IDX1,IDX2,IDX3,IDX4) FOR2(IDX1,IDX2) FOR2(IDX3,IDX4)
 
+
 int main(void)
 {
 	// Setting up inital data
 		
-	double center_x = 100;
-	double center_y = 5.5;
+	double center_x = 15;
+	double center_y = -12.5;
 	double center_z = 0.0;
 	double start_time = 0.0;
 	double velocity_x = -1.0;
@@ -42,18 +44,17 @@ int main(void)
 			         lapse);
 
 
-	geodesic_shooter<Black_Hole> pewpew;
+	geodesic_shooter<Oscilloton> pewpew;
 
-	pewpew.shoot(initial_data,0.2,20);
-
+	pewpew.shoot(initial_data,0.25,100);
 
  	string name_render = "out.ppm";	
-	render_black_hole<Black_Hole> rend;
+	render_black_hole<Oscilloton> rend;
 	const double size_x = 20;
 	const double size_y = 20;
 	int pic[H*H] ; 
 
-	const Vec3 center(100.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
+	const Vec3 center(15.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
 
 	rend.picture(pic,center,size_x,size_y);	
 
