@@ -20,7 +20,7 @@ class Oscilloton{
 	static double m_omega; 
 
 	private:
-   	static tensor<2, double> get_metric( double M,  double x, double y, double z){
+   	static tensor<2, double> get_metric( double M,  double x, double y, double z, double t){
 
                 tensor<2,double> jacobian;
                 tensor<2,double> g ;
@@ -47,11 +47,11 @@ class Oscilloton{
 
 		double A = 0;
 		double C = 0;
-		double t = 0;
+
 		if(rr < spacing*row_max){	
-			for(int i=1; i<8;i++){
-      					A += get_a202(rr,i)*cos((2*i)*m_omega*t);
-      					C += get_c202(rr,i)*cos((2*i)*m_omega*t);
+			for(int i=0; i<7;i++){
+      					A += get_a202(rr,i+1)*cos((2*i)*m_omega*t);
+      					C += get_c202(rr,i+1)*cos((2*i)*m_omega*t);
     			}
 		}else{
 			A = 1;
@@ -89,25 +89,27 @@ class Oscilloton{
                 return g;
         }
 
-	static tensor<3, double> get_metric_deriv(double M, double x,double y, double z){
+	static tensor<3, double> get_metric_deriv(double M, double x,double y, double z,double t ){
 		
 		tensor<3,double> dg;
 		tensor<2,double> g ;
 		tensor<2,double> g_dx ;
 		tensor<2,double> g_dy ;
 		tensor<2,double> g_dz ;
-		double h = 1e-8;
+		tensor<2,double> g_dt ;
+		double h = 1e-4;
 
-		g = get_metric(M,x,y,z);
-		g_dx = get_metric(M,x-h,y,z);
-		g_dy = get_metric(M,x,y-h,z);
-		g_dz = get_metric(M,x,y,z-h);
+		g = get_metric(M,x,y,z,t);
+		g_dx = get_metric(M,x-h,y,z,t);
+		g_dy = get_metric(M,x,y-h,z,t);
+		g_dz = get_metric(M,x,y,z-h,t);
+		g_dt = get_metric(M,x,y,z,t-h);
 
 		FOR2(i,j){
 			dg[i][j][0] = (g[i][j]-g_dx[i][j])/h;
 			dg[i][j][1] = (g[i][j]-g_dy[i][j])/h;
 			dg[i][j][2] = (g[i][j]-g_dz[i][j])/h;
-			dg[i][j][3] = 0;
+			dg[i][j][3] = (g[i][j]-g_dt[i][j])/h;
 		}
 		return dg;
 		
@@ -225,11 +227,11 @@ class Oscilloton{
 
 		// ==================== 
 
-		g  = get_metric(M,v.x,v.y,v.z);
+		g  = get_metric(M,v.x,v.y,v.z,v.t);
 	
 		g_UU = calculate_spatial_inverse(g);
 
-		dg = get_metric_deriv(M,v.x,v.y,v.z);
+		dg = get_metric_deriv(M,v.x,v.y,v.z,v.t);
 				
 		//=========================
 
@@ -252,7 +254,7 @@ class Oscilloton{
 	double calculate_norm(Vec3 v,double M = 1){
 		double norm = 0;
                 tensor<1,double> dx = {v.vx,v.vy,v.vz,v.vt};
-		tensor<2,double> g = get_metric(M,v.x,v.y,v.z);
+		tensor<2,double> g = get_metric(M,v.x,v.y,v.z,v.t);
 
 		FOR2(i,j){
 			norm += g[i][j]*dx[i]*dx[j];
@@ -264,7 +266,7 @@ class Oscilloton{
 	Vec3 set_norm(Vec3 v, double norm_val=0, double M =1){
 		double norm = calculate_norm(v);
 		tensor<1,double> dx = {v.vx,v.vy,v.vz,v.vt};
-		tensor<2,double> g = get_metric(M,v.x,v.y,v.z);
+		tensor<2,double> g = get_metric(M,v.x,v.y,v.z,v.t);
 
 		double tmp = norm - g[3][3]*dx[3]*dx[3];
 		v.vt = sqrt(1.0/g[3][3]*(norm_val-tmp));
