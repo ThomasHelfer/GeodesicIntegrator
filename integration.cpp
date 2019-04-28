@@ -27,7 +27,12 @@ using namespace std;
 
 int main(void)
 {
+	// ==========================================
+	// ========== Shooting some test geod========
+	// ==========================================
+
 	// Setting up inital data
+	
 		
 	double center_x = 15;
 	double center_y = -12.5;
@@ -37,6 +42,7 @@ int main(void)
 	double velocity_y = 0.0;
 	double velocity_z = 0.0;
 	double lapse  = -1.0;
+	bool null_geodesic = true; 
 
 	const Vec3 initial_data(center_x, center_y, center_z,
 		                start_time,
@@ -46,7 +52,11 @@ int main(void)
 
 	geodesic_shooter<Oscilloton> pewpew;
 
-	pewpew.shoot(initial_data,0.25,100);
+	pewpew.shoot(initial_data,0.25,100,null_geodesic);
+
+	// ==========================================
+	// ========== Render a picture ==============
+	// ==========================================
 
  	string name_render = "out.ppm";	
 	render_black_hole<Oscilloton> rend;

@@ -3,7 +3,7 @@
 template <typename data_t>
 class geodesic_shooter{
         public:
-        void shoot(Vec3 center, double shift = 1/5., int shoot = 10 , 
+        void shoot(Vec3 center, double shift = 1/5., int shoot = 10 , bool set_null = true,  
 		   const double TIME_MAXIMUM = 150.0, const double T_START = 0.0, const double DT = 0.1){
 
                 data_t metric;
@@ -14,7 +14,7 @@ class geodesic_shooter{
                         const Vec3 Y_START(0.0, i*shift, 0.0, 0.0, 0.0, 0.00, 0.0, 0.0);
                         Vec3 y = Y_START + center;
 			
-			y = metric.set_norm(y,0);
+			if(set_null){y = metric.set_norm(y,0);}
 
 			double t = T_START;
 
