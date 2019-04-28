@@ -1,5 +1,4 @@
 
-# define H 100
 
 template <typename data_t>
 class render_black_hole{

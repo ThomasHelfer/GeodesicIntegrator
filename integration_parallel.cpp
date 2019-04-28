@@ -11,6 +11,9 @@
 #include <ctime>
 #include <mpi.h>
 
+
+# define H 1
+
 #include "tensor.hpp"
 #include "schwarzschild.hpp"
 #include "rk4.hpp"

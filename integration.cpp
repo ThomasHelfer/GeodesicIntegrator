@@ -10,6 +10,9 @@
 #include <algorithm> 
 #include <ctime>
 
+
+# define H 1
+
 #include "tensor.hpp"
 #include "schwarzschild.hpp"
 #include "rk4.hpp"
@@ -23,6 +26,7 @@ using namespace std;
 #define FOR2(IDX1,IDX2) FOR1(IDX1) FOR1(IDX2)
 #define FOR3(IDX1,IDX2,IDX3) FOR2(IDX1,IDX2) FOR1(IDX3)
 #define FOR4(IDX1,IDX2,IDX3,IDX4) FOR2(IDX1,IDX2) FOR2(IDX3,IDX4)
+
 
 
 int main(void)
