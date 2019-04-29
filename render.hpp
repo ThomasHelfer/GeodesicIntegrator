@@ -3,7 +3,8 @@
 template <typename data_t>
 class render_black_hole{
         public:
-        int* picture(int* picture, Vec3 center, double  max_x, double  max_y,
+        void picture(int* red, int* green, int* blue,
+		      Vec3 center, double  max_x, double  max_y,
 		      const double alpha = 0,
                       const int start_ind = 0, int end_ind = (H*H), 
     		      const double TIME_MAXIMUM = 150.0, const double DT = 0.1,
@@ -38,45 +39,31 @@ class render_black_hole{
                                         double rr = abs(sqrt((y.x)*(y.x)+(y.y)*(y.y))-6.5);
 
                                         if( rr < 1 && abs(y.z) < 0.2){
-                                                picture[i_local] = (int)(rr*255);
+                                                red[i_local] = (int)(rr*255);
+                                                green[i_local] = 0;
+                                                blue[i_local] = 0;
                                                 draw = false;
                                         }
                                 }
                                 if(draw){
-                                        picture[i_local] = 0;
+                                                red[i_local] = 0; 
+                                                green[i_local] = 0;
+                                                blue[i_local] = 0;
                                 }
 
 
                 }
 
-/*
-                        start = std::clock();
-   			duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-                        cout << " Completed = " <<  (double)y1/(double)H*100 << " % " << endl;
-                        cout << " duration " << duration << " sec" <<endl;
-                        cout << " Estmated time to finish " << (double)duration*((double)H-(double)y1)/60.0 << " min " << endl;
-*/
-			return picture;
         }
 
-       void render(int *picture, string file_name){
+       void render(int *red, int *green, int *blue, string file_name){
           std::ofstream out(file_name);
           out << "P3\n" << H << ' ' << H << ' ' << "255\n";
 
           for(int i = 0; i < H*H; i++){
-		  	   if(picture[i] != 0){
-			   int red =  picture[i];
-			   int blue = abs(255-picture[i]);
-			   //cout << red << endl;
-			   out << 255 << ' '
-                            << blue << ' '
-                           << 0 << '\n';
-			   } else {
-
-			   out << 0 << ' '
-                               << 0 << ' '
-                               << 0 << '\n';
-			   }
+			   out << red[i] << ' '
+                               << green[i] << ' '
+                               << blue[i] << '\n';
           }
         }
 };

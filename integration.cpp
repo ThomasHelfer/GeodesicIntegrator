@@ -66,13 +66,15 @@ int main(void)
 	render_black_hole<Oscilloton> rend;
 	const double size_x = 20;
 	const double size_y = 20;
-	int pic[H*H] ; 
+	int red[H*H] ; 
+	int green[H*H] ; 
+	int blue[H*H] ; 
 
 	const Vec3 center(15.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
 
-	rend.picture(pic,center,size_x,size_y);	
+	rend.picture(red,green,blue,center,size_x,size_y);	
 
-	rend.render(pic,name_render);
+	rend.render(red,green,blue,name_render);
 
 
 	 return 0;

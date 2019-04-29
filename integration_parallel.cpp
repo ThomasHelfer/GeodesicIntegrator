@@ -12,7 +12,7 @@
 #include <mpi.h>
 
 
-# define H 1
+# define H 100
 
 #include "tensor.hpp"
 #include "schwarzschild.hpp"
@@ -46,8 +46,12 @@ int main(void)
 	double alpha = 0;
 	double t1,t2;	
 
-	int* pic_local = (int *)malloc(sizeof(int) * size_per_task);
-	int* pic = (int *)malloc(sizeof(int) * size_per_task * numtasks);
+	int* red_local   = (int *)malloc(sizeof(int) * size_per_task);
+	int* green_local = (int *)malloc(sizeof(int) * size_per_task);
+	int* blue_local  = (int *)malloc(sizeof(int) * size_per_task);
+	int* red   = (int *)malloc(sizeof(int) * size_per_task * numtasks);
+	int* green = (int *)malloc(sizeof(int) * size_per_task * numtasks);
+	int* blue  = (int *)malloc(sizeof(int) * size_per_task * numtasks);
 
 	// ========== Main CODE =================
 	int i = 0;	
@@ -61,14 +65,16 @@ int main(void)
 		imgname.append(".ppm");	
 
 		const Vec3 center(100.0*cos(alpha), 0.0, 100*sin(alpha), 0.0, -1.0*cos(alpha), 0.0, -1.0*sin(alpha), 1.0); // Set Up center and viewing angle
-		rend.picture(pic_local,center, size_x,size_y,alpha, rank*size_per_task , size_per_task*(rank+1));	
+		rend.picture(red_local, green_local, blue_local, center, size_x,size_y,alpha, rank*size_per_task , size_per_task*(rank+1));	
 		if(rank==0){ cout << imgname <<  endl;}
 
 		// --------- MPI communication ------------
-		MPI_Gather(pic_local, size_per_task, MPI_INT, pic , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
+		MPI_Gather(red_local, size_per_task, MPI_INT, red , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
+		MPI_Gather(green_local, size_per_task, MPI_INT, green , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
+		MPI_Gather(blue_local, size_per_task, MPI_INT, blue , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
 
 		// ---------- Write out data --------------
-		if(rank==0){rend.render(pic,imgname);}
+		if(rank==0){rend.render(red, green, blue, imgname);}
 
 
 		t2 = MPI_Wtime();
@@ -77,8 +83,13 @@ int main(void)
 		i++;
 	}
 	// =========== Clean up =================
-	free(pic_local);
- 	free(pic);
+
+	free(red_local);
+	free(green_local);
+	free(blue_local);
+ 	free(red);
+ 	free(green);
+ 	free(blue);
 
 	MPI_Finalize();
 
