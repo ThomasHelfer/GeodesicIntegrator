@@ -57,6 +57,7 @@ int main(void)
 	int i = 0;	
 	for(alpha = 0; alpha < M_PI/2.; alpha += M_PI/(2.*50.)){
 
+		// ------ Create Filename -----------------
 		t1 = MPI_Wtime();
 		string imgname="Image_";
 		char cbuff[20];
@@ -64,10 +65,13 @@ int main(void)
 		imgname.append(cbuff);
 		imgname.append(".ppm");	
 
+
+		// ------ Making Picture (all the hard work is here) --- 
 		const Vec3 center(100.0*cos(alpha), 0.0, 100*sin(alpha), 0.0, -1.0*cos(alpha), 0.0, -1.0*sin(alpha), 1.0); // Set Up center and viewing angle
 		rend.picture(red_local, green_local, blue_local, center, size_x,size_y,alpha, rank*size_per_task , size_per_task*(rank+1));	
 		if(rank==0){ cout << imgname <<  endl;}
 
+		// Draw A circle 
 		rend.render_circle(red_local, green_local, blue_local, size_x, size_y, rank*size_per_task , size_per_task*(rank+1));
 
 		// --------- MPI communication ------------
