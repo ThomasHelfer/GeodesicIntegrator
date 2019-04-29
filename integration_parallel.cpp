@@ -68,6 +68,8 @@ int main(void)
 		rend.picture(red_local, green_local, blue_local, center, size_x,size_y,alpha, rank*size_per_task , size_per_task*(rank+1));	
 		if(rank==0){ cout << imgname <<  endl;}
 
+		rend.render_circle(red_local, green_local, blue_local, size_x, size_y, rank*size_per_task , size_per_task*(rank+1));
+
 		// --------- MPI communication ------------
 		MPI_Gather(red_local, size_per_task, MPI_INT, red , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
 		MPI_Gather(green_local, size_per_task, MPI_INT, green , size_per_task, MPI_INT, 0, MPI_COMM_WORLD);
