@@ -67,13 +67,18 @@ y_Photon = 3*mass*np.cos(theta)
 # ================= Plotting ========================
 
 print("Plotting geodesics ")
+N1 = len(data)
+cmap = plt.get_cmap('autumn')
+colors = [cmap(i) for i in np.linspace(1, 0, N1)]
 
 plt.figure(figsize=(14, 14), dpi=200)
 plt.plot(x_horizon,y_horizon,label = 'horizon',color = 'black')
 plt.plot(x_ISCO,y_ISCO,label = 'ISCO')
 plt.plot(x_Photon,y_Photon,label = 'Photon Sphere')
+ind = 0 
 for pos in data:
-    plt.plot(pos[0],pos[1])
+    plt.plot(pos[0],pos[1],color = colors[ind])
+    ind += 1 
 plt.xlabel(r'$x~[M^{-1}]$')
 plt.ylabel(r'$y~[M^{-1}]$')
 plt.xlim([-20,20])
