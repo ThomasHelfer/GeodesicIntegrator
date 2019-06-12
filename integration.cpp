@@ -1,8 +1,3 @@
-/*
- * compiled with gcc 5.4:
- * g++-mp-5 -std=c++14 -o rk4 rk4.cc
- *
- */
 #include <iostream>
 #include <fstream>
 #include <math.h>
@@ -10,8 +5,8 @@
 #include <algorithm> 
 #include <ctime>
 
-
-# define H 1
+// Resolution of picture
+# define H 10
 
 #include "tensor.hpp"
 #include "schwarzschild.hpp"
@@ -54,7 +49,7 @@ int main(void)
 			         lapse);
 
 
-	geodesic_shooter<Oscilloton> pewpew;
+	geodesic_shooter<Black_Hole> pewpew;
 
 	pewpew.shoot(initial_data,0.25,100,null_geodesic);
 

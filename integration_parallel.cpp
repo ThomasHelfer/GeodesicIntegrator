@@ -1,8 +1,3 @@
-/*
- * compiled with gcc 5.4:
- * g++-mp-5 -std=c++14 -o rk4 rk4.cc
- *
- */
 #include <iostream>
 #include <fstream>
 #include <math.h>
@@ -11,7 +6,7 @@
 #include <ctime>
 #include <mpi.h>
 
-
+// Resolution of picture 
 # define H 100
 
 #include "tensor.hpp"
