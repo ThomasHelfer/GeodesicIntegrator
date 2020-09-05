@@ -1,3 +1,9 @@
+#ifndef RK4VEC_HPP
+#define RK4VEC_HPP
+
+#include <cmath>
+#include <iostream>
+
 struct Vec3 {
   double x,y,z,t, vx,vy,vz,vt;
   Vec3(double x, double y, double z, double t,
@@ -22,3 +28,5 @@ struct Vec3 {
           std::cout <<"t " << z << "\n";
   };
 };
+
+#endif
