@@ -5,7 +5,6 @@
 #ifndef GEODESIC_SHOOTER_IMPL_HPP
 #define GEODESIC_SHOOTER_IMPL_HPP
 
-#include "geodesic_shooter.hpp"
 
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
@@ -52,4 +51,4 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
     }
 };
 
-#endif /* GEODESIC_SHOOTER_IMPL_HPP */
+#endif

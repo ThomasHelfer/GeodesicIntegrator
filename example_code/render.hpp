@@ -25,4 +25,7 @@ class render_black_hole
     void render(int *red, int *green, int *blue, const int resolution,std::string file_name);
 };
 
+
+#include "render.impl.hpp"
+
 #endif

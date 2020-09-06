@@ -1,5 +1,9 @@
+#if !defined(RENDER_HPP)
+#error "This file should only be included through render.hpp"
+#endif
 
-#include "render.hpp"
+#ifndef RENDER_IMPL_HPP
+#define RENDER_IMPL_HPP
 
 template <typename data_t>
 void render_black_hole<data_t>::picture(int *red, int *green, int *blue, Vec3 center,
@@ -107,3 +111,5 @@ void render_black_hole<data_t>::render(int *red, int *green, int *blue,
         out << red[i] << ' ' << green[i] << ' ' << blue[i] << '\n';
     }
 }
+
+#endif

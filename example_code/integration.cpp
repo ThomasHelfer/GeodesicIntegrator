@@ -61,9 +61,9 @@ int main(void)
 
     const Vec3 center(15.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0);
 
-//    rend.picture(red, green, blue, center, size_x, size_y, resolution, alpha, start_ind, end_ind);
+    rend.picture(red, green, blue, center, size_x, size_y, resolution, alpha, start_ind, end_ind);
 
-//    rend.render(red, green, blue,resolution, name_render); //, alpha, start_ind, end_ind );
+    rend.render(red, green, blue,resolution, name_render);
 
     return 0;
 }
