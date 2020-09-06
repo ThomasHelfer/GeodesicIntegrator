@@ -16,4 +16,7 @@ template <typename data_t> class geodesic_shooter
                const double T_START = 0.0, const double DT = 0.1);
 };
 
+
+#include "geodesic_shooter.impl.hpp"
+
 #endif

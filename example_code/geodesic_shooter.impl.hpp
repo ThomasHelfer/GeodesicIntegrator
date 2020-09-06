@@ -1,3 +1,9 @@
+#if !defined(GEODESIC_SHOOTER_HPP)
+#error "This file should only be included through geodesic_shooter.hpp"
+#endif
+
+#ifndef GEODESIC_SHOOTER_IMPL_HPP
+#define GEODESIC_SHOOTER_IMPL_HPP
 
 #include "geodesic_shooter.hpp"
 
@@ -45,3 +51,5 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
         myfile.close();
     }
 };
+
+#endif /* GEODESIC_SHOOTER_IMPL_HPP */

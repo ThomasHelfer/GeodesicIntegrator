@@ -36,12 +36,12 @@ struct Vec3
         return Vec3(sqrt(v.x), sqrt(v.y), sqrt(v.z), sqrt(v.t), sqrt(v.vx),
                     sqrt(v.vy), sqrt(v.vz), sqrt(v.vt));
     };
-    Vec3 print() const
+    void print() const
     {
         std::cout << "x " << x << "\n";
         std::cout << "y " << y << "\n";
         std::cout << "z " << z << "\n";
-        std::cout << "t " << z << "\n";
+        std::cout << "t " << t << "\n";
     };
 };
 
