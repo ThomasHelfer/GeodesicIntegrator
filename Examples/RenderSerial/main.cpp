@@ -11,13 +11,10 @@
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
+#include "DimensionDefinitions.hpp"
 
 using namespace std;
 
-#define FOR1(IDX) for (int IDX = 0; IDX < 4; ++IDX)
-#define FOR2(IDX1, IDX2) FOR1(IDX1) FOR1(IDX2)
-#define FOR3(IDX1, IDX2, IDX3) FOR2(IDX1, IDX2) FOR1(IDX3)
-#define FOR4(IDX1, IDX2, IDX3, IDX4) FOR2(IDX1, IDX2) FOR2(IDX3, IDX4)
 
 int main(void)
 {

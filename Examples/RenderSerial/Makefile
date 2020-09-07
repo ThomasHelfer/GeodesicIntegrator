@@ -13,9 +13,6 @@ LDFLAGS := -lgsl
 srcfiles := $(shell find . -name "*.cpp") $(shell find $(OBJ_DIRS) -name "*.cpp")
 objects  := $(patsubst %.cpp, %.o, $(srcfiles))
 
-test:
-	echo $(OBJ_DIRS)
-	echo $(INC_DIRS)
 
 all: $(appname)
 
