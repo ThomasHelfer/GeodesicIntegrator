@@ -19,9 +19,9 @@ using namespace std;
 class Oscilloton
 {
   public:
-    double a202[row_max][8]; // a_j
-    double c202[row_max][8]; // c_j
-    double m_omega;
+    static double a202[row_max][8]; // a_j
+    static double c202[row_max][8]; // c_j
+    static double m_omega;
 
     Oscilloton();
 
@@ -52,5 +52,8 @@ class Oscilloton
 
 };
 
+    double Oscilloton::a202[row_max][8];
+    double Oscilloton::c202[row_max][8];
+    double Oscilloton::m_omega;
 
 #endif
