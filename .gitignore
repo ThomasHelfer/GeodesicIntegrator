@@ -1,2 +1,5 @@
 *.o
 .depend
+main
+*csv
+out.ppm
