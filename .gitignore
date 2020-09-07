@@ -2,4 +2,4 @@
 .depend
 main
 *csv
-out.ppm
+*.ppm

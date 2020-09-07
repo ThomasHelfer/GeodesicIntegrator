@@ -1,26 +1,10 @@
-#include "tensor.hpp"
+#include "Oscilloton.hpp"
 
 using namespace std;
 
-#define FOR1(IDX) for (int IDX = 0; IDX < 4; ++IDX)
-#define FOR2(IDX1, IDX2) FOR1(IDX1) FOR1(IDX2)
-#define FOR3(IDX1, IDX2, IDX3) FOR2(IDX1, IDX2) FOR1(IDX3)
-#define FOR4(IDX1, IDX2, IDX3, IDX4) FOR2(IDX1, IDX2) FOR2(IDX3, IDX4)
 
-#define column_max 8
-#define row_max 2600
-#define spacing 0.01
 
-class Oscilloton
-{
-
-  public:
-    static double a202[row_max][8]; // a_j
-    static double c202[row_max][8]; // c_j
-    static double m_omega;
-
-  private:
-    static tensor<2, double> get_metric(double M, double x, double y, double z,
+    tensor<2, double> Oscilloton::get_metric(double M, double x, double y, double z,
                                         double t)
     {
 
@@ -97,7 +81,7 @@ class Oscilloton
         return g;
     }
 
-    static tensor<3, double> get_metric_deriv(double M, double x, double y,
+    tensor<3, double> Oscilloton::get_metric_deriv(double M, double x, double y,
                                               double z, double t)
     {
 
@@ -126,7 +110,7 @@ class Oscilloton
     }
 
     // Calculate inverse, only true for this metric, not a general 4x4 inversion
-    static tensor<2, double> calculate_spatial_inverse(tensor<2, double> g)
+    tensor<2, double> Oscilloton::calculate_spatial_inverse(tensor<2, double> g)
     {
         tensor<2, double> g_UU;
 
@@ -153,7 +137,7 @@ class Oscilloton
         return g_UU;
     }
 
-    static tensor<3, double> get_chris(tensor<2, double> g_UU,
+    tensor<3, double> Oscilloton::get_chris(tensor<2, double> g_UU,
                                        tensor<3, double> dg)
     {
 
@@ -181,8 +165,7 @@ class Oscilloton
         return chris_ULL;
     }
 
-  public:
-    Oscilloton()
+    Oscilloton::Oscilloton()
     {
         ifstream ifs("Oscilloton_data/general_a202.dat");
         ifstream ifs2("Oscilloton_data/general_c202.dat");
@@ -198,7 +181,7 @@ class Oscilloton
         m_omega = sqrt(c202[row_max - 1][1]) / a202[row_max - 1][1];
     }
 
-    static Vec3 eval_diff_eqn(double t, Vec3 v)
+    Vec3 Oscilloton::eval_diff_eqn(double t, Vec3 v)
     {
 
         double M = 1;
@@ -258,7 +241,7 @@ class Oscilloton
         // return v.sqrt3(v)*t;
     }
 
-    double calculate_norm(Vec3 v, double M = 1)
+    double Oscilloton::calculate_norm(Vec3 v, double M)
     {
         double norm = 0;
         tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
@@ -268,7 +251,7 @@ class Oscilloton
         return norm;
     }
     // Change the vt component to set norm to any value
-    Vec3 set_norm(Vec3 v, double norm_val = 0, double M = 1)
+    Vec3 Oscilloton::set_norm(Vec3 v, double norm_val, double M )
     {
         double norm = calculate_norm(v);
         tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
@@ -279,7 +262,7 @@ class Oscilloton
         return v;
     }
 
-    static double get_a202(double rr, int component)
+    double Oscilloton::get_a202(double rr, int component)
     {
 
         int indxL = static_cast<int>(floor(rr / spacing));
@@ -293,7 +276,7 @@ class Oscilloton
         return out;
     }
 
-    static double get_c202(double rr, int component)
+    double Oscilloton::get_c202(double rr, int component)
     {
 
         int indxL = static_cast<int>(floor(rr / spacing));
@@ -306,8 +289,4 @@ class Oscilloton
 
         return out;
     }
-};
 
-double Oscilloton::a202[row_max][8];
-double Oscilloton::c202[row_max][8];
-double Oscilloton::m_omega;
