@@ -1,6 +1,10 @@
 #include "Oscilloton.hpp"
 
-using namespace std;
+
+
+double Oscilloton::a202[row_max][8];
+double Oscilloton::c202[row_max][8];
+double Oscilloton::m_omega;
 
 tensor<2, double> Oscilloton::get_metric(double M, double x, double y, double z,
                                          double t)
@@ -164,8 +168,8 @@ tensor<3, double> Oscilloton::get_chris(tensor<2, double> g_UU,
 
 Oscilloton::Oscilloton()
 {
-    ifstream ifs("Oscilloton_data/general_a202.dat");
-    ifstream ifs2("Oscilloton_data/general_c202.dat");
+    std::ifstream ifs("Oscilloton_data/general_a202.dat");
+    std::ifstream ifs2("Oscilloton_data/general_c202.dat");
 
     for (int i = 0; i < row_max; ++i)
     {

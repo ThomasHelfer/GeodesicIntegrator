@@ -10,8 +10,6 @@
 #include "Rk4vec.hpp"
 #include "tensor.hpp"
 
-using namespace std;
-
 #define column_max 8
 #define row_max 2600
 #define spacing 0.01
@@ -49,9 +47,5 @@ class Oscilloton
     static tensor<3, double> get_chris(tensor<2, double> g_UU,
                                        tensor<3, double> dg);
 };
-
-double Oscilloton::a202[row_max][8];
-double Oscilloton::c202[row_max][8];
-double Oscilloton::m_omega;
 
 #endif
