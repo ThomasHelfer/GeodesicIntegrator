@@ -5,7 +5,6 @@
 #ifndef GEODESIC_SHOOTER_IMPL_HPP
 #define GEODESIC_SHOOTER_IMPL_HPP
 
-
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
                                      bool set_null, const double TIME_MAXIMUM,

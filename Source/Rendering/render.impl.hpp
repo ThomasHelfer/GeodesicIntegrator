@@ -6,13 +6,12 @@
 #define RENDER_IMPL_HPP
 
 template <typename data_t>
-void render_black_hole<data_t>::picture(int *red, int *green, int *blue, Vec3 center,
-                                double max_x, double max_y,
-                                const int resolution,
-                                const double alpha, const int start_ind,
-                                int end_ind,
-                                const double TIME_MAXIMUM,
-                                const double DT, const double T_START)
+void render_black_hole<data_t>::picture(int *red, int *green, int *blue,
+                                        Vec3 center, double max_x, double max_y,
+                                        const int resolution,
+                                        const double alpha, const int start_ind,
+                                        int end_ind, const double TIME_MAXIMUM,
+                                        const double DT, const double T_START)
 {
 
     data_t metric;
@@ -65,11 +64,10 @@ void render_black_hole<data_t>::picture(int *red, int *green, int *blue, Vec3 ce
 
 template <typename data_t>
 void render_black_hole<data_t>::render_circle(int *red, int *green, int *blue,
-                                      double max_x, double max_y,
-                                      const int resolution,
-                                      const int start_ind,
-                                      int end_ind, double Radius,
-                                      double thickness)
+                                              double max_x, double max_y,
+                                              const int resolution,
+                                              const int start_ind, int end_ind,
+                                              double Radius, double thickness)
 {
 
     data_t metric;
@@ -100,8 +98,8 @@ void render_black_hole<data_t>::render_circle(int *red, int *green, int *blue,
 
 template <typename data_t>
 void render_black_hole<data_t>::render(int *red, int *green, int *blue,
-                               const int resolution,
-                               std::string file_name)
+                                       const int resolution,
+                                       std::string file_name)
 {
     std::ofstream out(file_name);
     out << "P3\n" << resolution << ' ' << resolution << ' ' << "255\n";

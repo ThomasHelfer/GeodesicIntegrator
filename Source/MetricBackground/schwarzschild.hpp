@@ -1,12 +1,11 @@
 #ifndef SCHWARZSCHILD_HPP
 #define SCHWARZSCHILD_HPP
 
+#include "DimensionDefinitions.hpp"
 #include "Rk4vec.hpp"
 #include "tensor.hpp"
-#include "DimensionDefinitions.hpp"
 
 using namespace std;
-
 
 class Black_Hole
 {

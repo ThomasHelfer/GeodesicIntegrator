@@ -6,9 +6,9 @@
 #include <sstream>
 #include <string>
 
-#include "tensor.hpp"
-#include "Rk4vec.hpp"
 #include "DimensionDefinitions.hpp"
+#include "Rk4vec.hpp"
+#include "tensor.hpp"
 
 using namespace std;
 
@@ -38,22 +38,20 @@ class Oscilloton
 
   private:
     static tensor<2, double> get_metric(double M, double x, double y, double z,
-                                        double t)  ;
+                                        double t);
 
     static tensor<3, double> get_metric_deriv(double M, double x, double y,
-                                              double z, double t)  ;
+                                              double z, double t);
 
     // Calculate inverse, only true for this metric, not a general 4x4 inversion
-    static tensor<2, double> calculate_spatial_inverse(tensor<2, double> g)  ;
+    static tensor<2, double> calculate_spatial_inverse(tensor<2, double> g);
 
     static tensor<3, double> get_chris(tensor<2, double> g_UU,
-                                       tensor<3, double> dg)  ;
-
-
+                                       tensor<3, double> dg);
 };
 
-    double Oscilloton::a202[row_max][8];
-    double Oscilloton::c202[row_max][8];
-    double Oscilloton::m_omega;
+double Oscilloton::a202[row_max][8];
+double Oscilloton::c202[row_max][8];
+double Oscilloton::m_omega;
 
 #endif

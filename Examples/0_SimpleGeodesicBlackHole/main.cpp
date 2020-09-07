@@ -5,13 +5,12 @@
 #include <math.h>
 #include <vector>
 
-
+#include "DimensionDefinitions.hpp"
 #include "geodesic_shooter.hpp"
 #include "render.hpp"
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
-#include "DimensionDefinitions.hpp"
 
 using namespace std;
 

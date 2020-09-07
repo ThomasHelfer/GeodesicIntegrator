@@ -8,11 +8,11 @@
 
 // Resolution of picture
 
+#include "DimensionDefinitions.hpp"
 #include "render.hpp"
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
-#include "DimensionDefinitions.hpp"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ int main(void)
 {
     int numtasks, rank, sendcount, recvcount, source;
     int size_per_task;
-    const int resolution = 10;
+    const int resolution = 30;
 
     // ============= MPI INIT ================
     MPI_Init(NULL, NULL);
@@ -60,16 +60,18 @@ int main(void)
         const Vec3 center(100.0 * cos(alpha), 0.0, 100 * sin(alpha), 0.0,
                           -1.0 * cos(alpha), 0.0, -1.0 * sin(alpha),
                           1.0); // Set Up center and viewing angle
-        rend.picture(red_local, green_local, blue_local, center, size_x, size_y, resolution,
-                     alpha, rank * size_per_task, size_per_task * (rank + 1));
+        rend.picture(red_local, green_local, blue_local, center, size_x, size_y,
+                     resolution, alpha, rank * size_per_task,
+                     size_per_task * (rank + 1));
         if (rank == 0)
         {
             cout << imgname << endl;
         }
 
         // Draw A circle
-        rend.render_circle(red_local, green_local, blue_local, resolution,  size_x, size_y,
-                           rank * size_per_task, size_per_task * (rank + 1));
+        rend.render_circle(red_local, green_local, blue_local, resolution,
+                           size_x, size_y, rank * size_per_task,
+                           size_per_task * (rank + 1));
 
         // --------- MPI communication ------------
         MPI_Gather(red_local, size_per_task, MPI_INT, red, size_per_task,

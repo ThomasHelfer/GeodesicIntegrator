@@ -5,15 +5,13 @@
 #include <math.h>
 #include <vector>
 
-
+#include "DimensionDefinitions.hpp"
+#include "Oscilloton.hpp"
 #include "geodesic_shooter.hpp"
 #include "render.hpp"
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
-#include "DimensionDefinitions.hpp"
-#include "Oscilloton.hpp"
-
 
 using namespace std;
 
