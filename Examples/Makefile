@@ -3,18 +3,18 @@ appname := integrate
 
 SRC_DIRS ?= ../Source .
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+OBJ_DIRS := $(filter-out $(SRC_DIRS),$(INC_DIRS))
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CXX := g++
 CXXFLAGS := $(INC_FLAGS) -O3 -std=c++14
 LDFLAGS := -lgsl
 
-srcfiles := $(shell find . -name "*.cpp")
+srcfiles := $(shell find . -name "*.cpp") $(shell find $(OBJ_DIRS) -name "*.cpp")
 objects  := $(patsubst %.cpp, %.o, $(srcfiles))
 
 test:
-	echo $(SRC_DIRS)
-	echo $(INC_FLAGS)
+	echo $(OBJ_DIRS)
 	echo $(INC_DIRS)
 
 all: $(appname)
