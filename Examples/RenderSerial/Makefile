@@ -1,7 +1,7 @@
-appname := integrate
+appname := main
 
 
-SRC_DIRS ?= ../Source .
+SRC_DIRS ?= ../../Source .
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 OBJ_DIRS := $(filter-out $(SRC_DIRS),$(INC_DIRS))
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
