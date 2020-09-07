@@ -7,30 +7,26 @@
 #include <vector>
 
 // Resolution of picture
-#define H 100
 
 #include "render.hpp"
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
+#include "DimensionDefinitions.hpp"
 
 using namespace std;
-
-#define FOR1(IDX) for (int IDX = 0; IDX < 4; ++IDX)
-#define FOR2(IDX1, IDX2) FOR1(IDX1) FOR1(IDX2)
-#define FOR3(IDX1, IDX2, IDX3) FOR2(IDX1, IDX2) FOR1(IDX3)
-#define FOR4(IDX1, IDX2, IDX3, IDX4) FOR2(IDX1, IDX2) FOR2(IDX3, IDX4)
 
 int main(void)
 {
     int numtasks, rank, sendcount, recvcount, source;
     int size_per_task;
+    const int resolution = 10;
 
     // ============= MPI INIT ================
     MPI_Init(NULL, NULL);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
-    size_per_task = (int)ceil(H * H / (double)numtasks);
+    size_per_task = (int)ceil(resolution * resolution / (double)numtasks);
     // ============= DEFINITIONS ==============
 
     char name_render[] = "out.ppm";
@@ -64,7 +60,7 @@ int main(void)
         const Vec3 center(100.0 * cos(alpha), 0.0, 100 * sin(alpha), 0.0,
                           -1.0 * cos(alpha), 0.0, -1.0 * sin(alpha),
                           1.0); // Set Up center and viewing angle
-        rend.picture(red_local, green_local, blue_local, center, size_x, size_y,
+        rend.picture(red_local, green_local, blue_local, center, size_x, size_y, resolution,
                      alpha, rank * size_per_task, size_per_task * (rank + 1));
         if (rank == 0)
         {
@@ -72,7 +68,7 @@ int main(void)
         }
 
         // Draw A circle
-        rend.render_circle(red_local, green_local, blue_local, size_x, size_y,
+        rend.render_circle(red_local, green_local, blue_local, resolution,  size_x, size_y,
                            rank * size_per_task, size_per_task * (rank + 1));
 
         // --------- MPI communication ------------
@@ -86,7 +82,7 @@ int main(void)
         // ---------- Write out data --------------
         if (rank == 0)
         {
-            rend.render(red, green, blue, imgname);
+            rend.render(red, green, blue, resolution, imgname);
         }
 
         t2 = MPI_Wtime();
