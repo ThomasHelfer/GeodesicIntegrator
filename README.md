@@ -4,7 +4,7 @@ A simple code to calculate geodesics using a given space-time using MPI to
 accelerate. It can just create geodesic traces or render pictures of simple 
 geometries positioned in space-time. ( See example below ) 
 
-![](Assets/output.gif)
+![](Assets/output.gif?style=centerme)
 
 ## Getting Started 
 
