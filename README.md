@@ -10,9 +10,12 @@ geometries positioned in space-time. ( See example below )
 
 To run the example to calculate Null-geodesics around a schwarzschild Black Hole  
 
+```
 $ Examples/0_SimpleGeodesicBlackHole
 $ make && ./main
 $ python plot.py
+```
+
 
 ## Technologies
 
