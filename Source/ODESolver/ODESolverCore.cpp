@@ -6,7 +6,7 @@ void ODE_Solver(gsl_odeiv2_system sys, double y[], const double time_start,
 {
 
     gsl_odeiv2_driver *d = gsl_odeiv2_driver_alloc_y_new(
-        &sys, gsl_odeiv2_step_rk4, hstart, epsabs, epsrel);
+        &sys, gsl_odeiv2_step_rk8pd, hstart, epsabs, epsrel);
 
     int i;
     double t = time_start;
@@ -22,7 +22,7 @@ void ODE_Solver(gsl_odeiv2_system sys, double y[], const double time_start,
             break;
         }
 
-//        printf("%.5e %.5e %.5e\n", t, y[0], y[1]);
+        printf("%.5e %.5e %.5e\n", t, y[0], y[1]);
     }
 
     gsl_odeiv2_driver_free(d);

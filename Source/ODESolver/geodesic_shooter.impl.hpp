@@ -37,9 +37,9 @@ int geodesic_shooter<data_t>::jac(double t, const double y[],
     gsl_matrix_set(m, 1, 0, -2.0 * mu * y[0] * y[1] - 1.0);
     gsl_matrix_set(m, 1, 1, -mu * (y[0] * y[0] - 1.0));
     dfdt[0] = 0.0;
-    dfdt[1] = 0.0;
+    dfdt[1] = 0.0;*/
     return GSL_SUCCESS;
-    */
+
 }
 
 template <typename data_t>
@@ -48,14 +48,11 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
                                      const double time_end,
                                      const double time_start, const double dt)
 {
-
+    double mu = 0;
     gsl_odeiv2_system sys = {func,
-                            nullptr, 8};
+                            jac, 8, &mu};
 
-    const double chi_start = 1e-10;
-    const double chi_end = M_PI/2;
-    const int NumberOutputs = 0;
-    const double eta_init = -0.6;
+    const int NumberOutputs = 1;
 
 
     for (int i = 0; i < shoot; i++)
@@ -71,7 +68,6 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
         double y[8];
         y_temp.write_to_array(y);
 
-
         double t = time_start;
 
         // ========= Preparing output ==========
@@ -85,10 +81,8 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
         // ========== Integration and output ===
         while (t <= time_end)
         {
-
-            ODE_Solver(sys, y, t, t+dt, NumberOutputs, 1e-13,1e-13);
+            ODE_Solver(sys, y, t, t+dt, NumberOutputs, 1e-6,1e-6);
             t+= dt;
-
             myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
                    << "   " << /*data_t::calculate_norm(y)*/42 << "\n";
         }
