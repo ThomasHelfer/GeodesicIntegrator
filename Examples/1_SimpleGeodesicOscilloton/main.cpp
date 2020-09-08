@@ -6,10 +6,10 @@
 #include <vector>
 
 #include "DimensionDefinitions.hpp"
+#include "Oscilloton.hpp"
 #include "geodesic_shooter.hpp"
 #include "render.hpp"
 #include "rk4.hpp"
-#include "Oscilloton.hpp"
 #include "tensor.hpp"
 
 using namespace std;
@@ -39,7 +39,8 @@ int main(void)
 
     geodesic_shooter<Oscilloton> pewpew;
 
-    pewpew.shoot(initial_data, 0.25, 100, null_geodesic,end_time,start_time,dt);
+    pewpew.shoot(initial_data, 0.25, 100, null_geodesic, end_time, start_time,
+                 dt);
 
     return 0;
 }

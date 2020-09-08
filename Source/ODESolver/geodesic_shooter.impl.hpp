@@ -7,7 +7,8 @@
 
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
-                                     bool set_geodesic_null, const double time_end,
+                                     bool set_geodesic_null,
+                                     const double time_end,
                                      const double time_start, const double dt)
 {
 

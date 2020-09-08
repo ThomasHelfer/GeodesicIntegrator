@@ -1,7 +1,5 @@
 #include "Oscilloton.hpp"
 
-
-
 double Oscilloton::a202[row_max][8];
 double Oscilloton::c202[row_max][8];
 double Oscilloton::m_omega;
