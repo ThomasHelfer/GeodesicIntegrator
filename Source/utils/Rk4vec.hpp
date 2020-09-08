@@ -35,14 +35,30 @@ struct Vec3
     {
         return Vec3(sqrt(v.x), sqrt(v.y), sqrt(v.z), sqrt(v.t), sqrt(v.vx),
                     sqrt(v.vy), sqrt(v.vz), sqrt(v.vt));
-    };
+    }
     void print() const
     {
         std::cout << "x " << x << "\n";
         std::cout << "y " << y << "\n";
         std::cout << "z " << z << "\n";
         std::cout << "t " << t << "\n";
-    };
+    }
+
+    void write_to_array(double w[]){
+
+
+        w[0] = x;
+        w[1] = y;
+        w[2] = z;
+        w[3] = t;
+        w[4] = vx;
+        w[5] = vy;
+        w[6] = vz;
+        w[7] = vt;
+
+    }
+
+
 };
 
 #endif

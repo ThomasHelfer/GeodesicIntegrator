@@ -32,7 +32,7 @@ int main(void)
     const double lapse = -1.0;
     const bool null_geodesic = true;
     const double end_time = 150;
-    const double dt = 0.01;
+    const double dt = 0.5;
 
     const Vec3 initial_data(center_x, center_y, center_z, start_time,
                             velocity_x, velocity_y, velocity_z, lapse);

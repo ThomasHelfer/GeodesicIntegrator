@@ -7,10 +7,17 @@
 #include <string>
 
 #include "Rk4vec.hpp"
+#include "ODESolverCore.hpp"
 
 template <typename data_t> class geodesic_shooter
 {
-  public:
+    public:
+
+    static int func(double t, const double y[], double f[], void *params);
+
+    static int jac(double t, const double y[], double *dfdy, double dfdt[],
+                   void *params);
+
     void shoot(Vec3 center, double shift = 1 / 5., int shoot = 10,
                bool set_geodesic_null = true, const double time_end = 150.0,
                const double time_start = 0.0, const double dt = 0.1);
