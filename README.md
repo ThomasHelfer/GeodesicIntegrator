@@ -6,9 +6,24 @@ geometries positioned in space-time. ( See example below )
 
 ![](Assets/output.gif)
 
-The metric components are written in a class and then
-passed as a template to the geodesic_shooter or render class to simplify the
-complexity of the code 
+## Getting Started 
+
+To run the example to calculate Null-geodesics around a schwarzschild Black Hole  
+
+$ Examples/0_SimpleGeodesicBlackHole
+$ make && ./main
+$ python plot.py
+
+## Technologies
+
+Here we use 
+
+* GNU Make 
+* C++ with version 14 or higher 
+** MPI 
+** GSL 
+* ImageMagick 
+* python 2.7 or higher 
 
 
 # 
