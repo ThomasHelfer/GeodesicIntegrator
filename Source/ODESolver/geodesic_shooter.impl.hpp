@@ -7,8 +7,8 @@
 
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
-                                     bool set_geodesic_null, const double TIME_MAXIMUM,
-                                     const double T_START, const double DT)
+                                     bool set_geodesic_null, const double time_end,
+                                     const double time_start, const double dt)
 {
 
     data_t metric;
@@ -25,7 +25,7 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
             y = metric.set_norm(y, 0);
         }
 
-        double t = T_START;
+        double t = time_start;
 
         // ========= Preparing output ==========
         std::string imgname = "xpos";
@@ -36,10 +36,10 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
         std::ofstream myfile(imgname);
 
         // ========== Integration and output ===
-        while (t <= TIME_MAXIMUM)
+        while (t <= time_end)
         {
-            y = y + dy(t, y, DT);
-            t += DT;
+            y = y + dy(t, y, dt);
+            t += dt;
 
             myfile << y.x << "       " << y.y << "   " << y.z << "   " << y.t
                    << "   " << metric.calculate_norm(y) << std::endl;
