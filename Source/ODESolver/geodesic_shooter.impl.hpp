@@ -7,7 +7,7 @@
 
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
-                                     bool set_null, const double TIME_MAXIMUM,
+                                     bool set_geodesic_null, const double TIME_MAXIMUM,
                                      const double T_START, const double DT)
 {
 
@@ -20,7 +20,7 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
         const Vec3 Y_START(0.0, i * shift, 0.0, 0.0, 0.0, 0.00, 0.0, 0.0);
         Vec3 y = Y_START + center;
 
-        if (set_null)
+        if (set_geodesic_null)
         {
             y = metric.set_norm(y, 0);
         }
