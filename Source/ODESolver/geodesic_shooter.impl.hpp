@@ -20,27 +20,6 @@ int geodesic_shooter<data_t>::func(double t, const double y[],
     return GSL_SUCCESS;
 }
 
-template <typename data_t>
-int geodesic_shooter<data_t>::jac(double t, const double y[],
-                                         double *dfdy, double dfdt[],
-                                         void *params)
-{
-    // EXAMPLE CODE FOR JACOBIAN ( ONLY NEEDED FOR SOME ODE METHODS )
-    // HERE WE IGNORE IT FOR THE MOMENT
-    /*
-    (void)(chi); //avoid unused parameter warning
-    double mu = *(double *)params;
-    gsl_matrix_view dfdy_mat = gsl_matrix_view_array(dfdy, 2, 2);
-    gsl_matrix *m = &dfdy_mat.matrix;
-    gsl_matrix_set(m, 0, 0, 0.0);
-    gsl_matrix_set(m, 0, 1, 1.0);
-    gsl_matrix_set(m, 1, 0, -2.0 * mu * y[0] * y[1] - 1.0);
-    gsl_matrix_set(m, 1, 1, -mu * (y[0] * y[0] - 1.0));
-    dfdt[0] = 0.0;
-    dfdt[1] = 0.0;*/
-    return GSL_SUCCESS;
-
-}
 
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
@@ -50,10 +29,13 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
 {
     double mu = 0;
     gsl_odeiv2_system sys = {func,
-                            jac, 8, &mu};
+                            nullptr, 8, &mu};
 
     const int NumberOutputs = 1;
-
+    const double epsabs = 1e-6;
+    const double epsrel = 1e-6;
+    const double hstart = 1e-6;
+    const int nmax = 1000;
 
     for (int i = 0; i < shoot; i++)
     {
@@ -77,14 +59,14 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
         imgname.append(cbuff);
         imgname.append(".csv");
         std::ofstream myfile(imgname);
-
+        int status = 0;
         // ========== Integration and output ===
-        while (t <= time_end)
+        while (t <= time_end && status == 0  )
         {
-            ODE_Solver(sys, y, t, t+dt, NumberOutputs, 1e-6,1e-6);
+            status = ODE_Solver(sys, y, t, t+dt, NumberOutputs,hstart,  epsabs, epsrel,nmax);
             t+= dt;
             myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
-                   << "   " << /*data_t::calculate_norm(y)*/42 << "\n";
+                   << "   " << 0.0 << "\n";
         }
 
         myfile << std::flush;
