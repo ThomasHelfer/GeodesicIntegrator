@@ -16,6 +16,15 @@ $ make && ./main
 $ python plot.py
 ```
 
+To run the expensive render as shown above 
+
+```
+$ cd Examples/3_RenderParallel/
+$ make 
+$ mpirun -n 4 ./main
+$ sh get_png.sh
+```
+
 
 ## Technologies
 
