@@ -81,8 +81,8 @@ for pos in data:
     ind += 1 
 plt.xlabel(r'$x~[M^{-1}]$')
 plt.ylabel(r'$y~[M^{-1}]$')
-plt.xlim([-20,20])
-plt.ylim([-20,20])
+plt.xlim([-15,15])
+plt.ylim([-15,15])
 plt.legend()
 plt.grid()
 plt.savefig("gedodesic.png",bbox_inches = 'tight')

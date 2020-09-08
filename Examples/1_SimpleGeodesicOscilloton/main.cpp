@@ -6,11 +6,10 @@
 #include <vector>
 
 #include "DimensionDefinitions.hpp"
-#include "Oscilloton.hpp"
 #include "geodesic_shooter.hpp"
 #include "render.hpp"
 #include "rk4.hpp"
-#include "schwarzschild.hpp"
+#include "Oscilloton.hpp"
 #include "tensor.hpp"
 
 using namespace std;
@@ -32,15 +31,15 @@ int main(void)
     const double velocity_z = 0.0;
     const double lapse = -1.0;
     const bool null_geodesic = true;
-    const double max_time = 150;
+    const double end_time = 35;
     const double dt = 0.01;
 
     const Vec3 initial_data(center_x, center_y, center_z, start_time,
                             velocity_x, velocity_y, velocity_z, lapse);
 
-    geodesic_shooter<Black_Hole> pewpew;
+    geodesic_shooter<Oscilloton> pewpew;
 
-    pewpew.shoot(initial_data, 0.25, 100, null_geodesic,max_time,start_time,dt);
+    pewpew.shoot(initial_data, 0.25, 100, null_geodesic,end_time,start_time,dt);
 
     return 0;
 }
