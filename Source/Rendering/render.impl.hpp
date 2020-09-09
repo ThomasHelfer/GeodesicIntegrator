@@ -10,15 +10,22 @@ void render_black_hole<data_t>::picture(int *red, int *green, int *blue,
                                         Vec3 center, double max_x, double max_y,
                                         const int resolution,
                                         const double alpha, const int start_ind,
-                                        int end_ind, const double TIME_MAXIMUM,
-                                        const double DT, const double T_START)
+                                        int end_ind, const double time_end,
+                                        const double dt,const double time_start)
 {
 
     data_t metric;
     std::clock_t start;
     double duration;
 
-    auto dy = rk4(metric.eval_diff_eqn);
+    gsl_odeiv2_system sys = {metric.eval_diff_eqn,
+                             nullptr, 8 };
+
+    const int NumberOutputs = 1;
+    const double epsabs = 1e-6;
+    const double epsrel = 1e-6;
+    const double hstart = 1e-6;
+    const int nmax = 1000;
 
     for (int i = start_ind; i < end_ind; i++)
     {
@@ -32,20 +39,28 @@ void render_black_hole<data_t>::picture(int *red, int *green, int *blue,
         Vec3 Y_START(-y_shot * sin(alpha), x_shot, y_shot * cos(alpha), 0.0,
                      0.0, 0.00, 0.0, 0.0);
         Y_START = Y_START + center;
-        Vec3 y = Y_START;
-        y = metric.set_norm(y, 0);
-        double t = T_START;
 
-        while ((t <= TIME_MAXIMUM) && draw)
+        // Making it a null - geodesic
+        Vec3 y_temp = Y_START;
+        y_temp = metric.set_norm(y_temp, 0);
+
+        double t = time_start;
+        double status;
+
+
+        double y[8];
+        y_temp.write_to_array(y);
+
+        while ((t <= time_end) && draw && status == 0)
         {
-            y = y + dy(t, y, DT);
-            t += DT;
+            status = ODE_Solver(sys, y, t,t + dt , NumberOutputs,hstart,  epsabs, epsrel,nmax);
+            t+= dt;
 
-            double rr = abs(sqrt((y.x) * (y.x) + (y.y) * (y.y)) - 6.5);
+            double rr = abs(sqrt((y[0]) * (y[0]) + (y[1]) * (y[1])) - 6.5);
 
-            if (rr < 1 && abs(y.z) < 0.2)
+            if (rr < 1 && abs(y[2]) < 0.2)
             {
-                double blue_tmp = 1 - t / y.t;
+                double blue_tmp = 1 - t / y[4];
                 double red_tmp = (rr);
                 red[i_local] = (int)(255 * red_tmp);
                 green[i_local] = 0;

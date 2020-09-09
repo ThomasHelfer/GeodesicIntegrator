@@ -20,7 +20,7 @@ int main(void)
 {
     int numtasks, rank, sendcount, recvcount, source;
     int size_per_task;
-    const int resolution = 30;
+    const int resolution = 100;
 
     // ============= MPI INIT ================
     MPI_Init(NULL, NULL);

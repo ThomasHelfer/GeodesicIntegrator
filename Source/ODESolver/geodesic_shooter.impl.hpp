@@ -12,10 +12,9 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
                                      const double time_end,
                                      const double time_start, const double dt)
 {
-    double mu = 0;
     data_t metric;
     gsl_odeiv2_system sys = {metric.eval_diff_eqn,
-                            nullptr, 8, &mu};
+                            nullptr, 8};
 
     const int NumberOutputs = 1;
     const double epsabs = 1e-6;
