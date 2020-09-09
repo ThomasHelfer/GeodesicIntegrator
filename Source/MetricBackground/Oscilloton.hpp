@@ -6,6 +6,10 @@
 #include <sstream>
 #include <string>
 
+#include <gsl/gsl_errno.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_odeiv2.h>
+
 #include "DimensionDefinitions.hpp"
 #include "Rk4vec.hpp"
 #include "tensor.hpp"
@@ -23,7 +27,7 @@ class Oscilloton
 
     Oscilloton();
 
-    static Vec3 eval_diff_eqn(double t, Vec3 v);
+    static int eval_diff_eqn(double t, const double y[], double f[], void *params);
 
     static double calculate_norm(Vec3 v, double M = 1);
 

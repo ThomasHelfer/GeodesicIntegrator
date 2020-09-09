@@ -180,7 +180,7 @@ Oscilloton::Oscilloton()
     m_omega = sqrt(c202[row_max - 1][1]) / a202[row_max - 1][1];
 }
 
-Vec3 Oscilloton::eval_diff_eqn(double t, Vec3 v)
+int Oscilloton::eval_diff_eqn(double t, const double y[], double f[], void *params)
 {
 
     double M = 1;
@@ -189,6 +189,8 @@ Vec3 Oscilloton::eval_diff_eqn(double t, Vec3 v)
     tensor<3, double> dg;        //
     tensor<3, double> chris_ULL; // Christoffel index high low low
     tensor<2, double> jacobian = {};
+
+    Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
 
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
     tensor<1, double> ddx;
@@ -236,8 +238,9 @@ Vec3 Oscilloton::eval_diff_eqn(double t, Vec3 v)
 
     Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2], ddx[3]);
 
-    return out;
-    // return v.sqrt3(v)*t;
+    out.write_to_array(f);
+
+    return GSL_SUCCESS;
 }
 
 double Oscilloton::calculate_norm(Vec3 v, double M)

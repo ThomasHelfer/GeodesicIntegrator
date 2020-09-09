@@ -5,21 +5,6 @@
 #ifndef GEODESIC_SHOOTER_IMPL_HPP
 #define GEODESIC_SHOOTER_IMPL_HPP
 
-template <typename data_t>
-int geodesic_shooter<data_t>::func(double t, const double y[],
-                                          double f[], void *params)
-{
-    double parameter = *(double *)params;
-
-    Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
-
-    v = data_t::eval_diff_eqn(t,v);
-
-    v.write_to_array(f);
-
-    return GSL_SUCCESS;
-}
-
 
 template <typename data_t>
 void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
@@ -28,7 +13,8 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
                                      const double time_start, const double dt)
 {
     double mu = 0;
-    gsl_odeiv2_system sys = {func,
+    data_t metric;
+    gsl_odeiv2_system sys = {metric.eval_diff_eqn,
                             nullptr, 8, &mu};
 
     const int NumberOutputs = 1;

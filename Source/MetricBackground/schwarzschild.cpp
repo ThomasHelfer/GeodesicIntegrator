@@ -32,7 +32,7 @@ tensor<2, double> Black_Hole::get_metric(double M, double x, double y, double z)
     g_spher[1][1] = rr2;
     // Define phi phi component
     g_spher[2][2] = rr2 * pow(sintheta, 2);
-    // Devine tt component
+    // Define tt component
     g_spher[3][3] = -(1. - 2.0 * M / rr);
 
     jacobian[0][0] = x / rr;
@@ -140,7 +140,7 @@ tensor<3, double> Black_Hole::get_chris(tensor<2, double> g_UU,
     return chris_ULL;
 }
 
-Vec3 Black_Hole::eval_diff_eqn(double t, Vec3 v)
+int Black_Hole::eval_diff_eqn(double t, const double y[], double f[], void *params)
 {
 
     double M = 1;
@@ -149,6 +149,8 @@ Vec3 Black_Hole::eval_diff_eqn(double t, Vec3 v)
     tensor<3, double> dg;        //
     tensor<3, double> chris_ULL; // Christoffel index high low low
     tensor<2, double> jacobian = {};
+
+    Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
 
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
     tensor<1, double> ddx;
@@ -178,7 +180,7 @@ Vec3 Black_Hole::eval_diff_eqn(double t, Vec3 v)
 
     // Freezing out geodesics that are too close to Horizon (Metric is singular
     // at horizon)
-    if (rr < 2 * M + eps)
+/*    if (rr < 2 * M + eps)
     {
         FOR1(i)
         {
@@ -188,6 +190,7 @@ Vec3 Black_Hole::eval_diff_eqn(double t, Vec3 v)
         Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2], ddx[3]);
         return out;
     }
+*/
     // ====================
 
     g = get_metric(M, v.x, v.y, v.z);
@@ -209,8 +212,10 @@ Vec3 Black_Hole::eval_diff_eqn(double t, Vec3 v)
 
     Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2], ddx[3]);
 
-    return out;
-    // return v.sqrt3(v)*t;
+    out.write_to_array(f);
+
+    return GSL_SUCCESS;
+
 }
 
 double Black_Hole::calculate_norm(Vec3 v, double M)
