@@ -7,7 +7,7 @@
 
 
 template <typename data_t>
-void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
+void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int numberofgeodesics,
                                      bool set_geodesic_null,
                                      const double time_end,
                                      const double time_start, const double dt)
@@ -22,10 +22,10 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int shoot,
     const double hstart = 1e-6;
     const int nmax = 1000;
 
-    for (int i = 0; i < shoot; i++)
+    for (int i = 0; i < numberofgeodesics; i++)
     {
 
-        const Vec3 Y_START(0.0, i * shift, 0.0, 0.0, 0.0, 0.00, 0.0, 0.0);
+        const Vec3 Y_START(0.0, i * shift, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         Vec3 y_temp = Y_START + center;
         if (set_geodesic_null)
         {
