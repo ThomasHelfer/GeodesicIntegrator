@@ -12,8 +12,6 @@
 #include "rk4.hpp"
 #include "tensor.hpp"
 
-using namespace std;
-
 int main(void)
 {
     // ==========================================
@@ -29,6 +27,10 @@ int main(void)
     const double velocity_x = -1.0;
     const double velocity_y = 0.0;
     const double velocity_z = 0.0;
+
+    const double shift_y = 0.25;
+    const int numberofgeodesics = 100;
+
     const double lapse = -1.0;
     const bool null_geodesic = true;
     const double end_time = 35;
