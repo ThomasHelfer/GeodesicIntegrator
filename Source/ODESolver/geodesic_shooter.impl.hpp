@@ -24,7 +24,7 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int numberofgeod
 
     for (int i = 0; i < numberofgeodesics; i++)
     {
-
+        // === Setting up initial data ========
         const Vec3 Y_START(0.0, i * shift, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         Vec3 y_temp = Y_START + center;
         if (set_geodesic_null)
@@ -45,13 +45,16 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int numberofgeod
         imgname.append(".csv");
         std::ofstream myfile(imgname);
         int status = 0;
+
         // ========== Integration and output ===
         while (t <= time_end && status == 0  )
         {
             status = ODE_Solver(sys, y, t, t+dt, NumberOutputs,hstart,  epsabs, epsrel,nmax);
-            t+= dt;
             myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
-                   << "   " << 0.0 << "\n";
+                   << "   " << t << "\n";
+
+            t+= dt;
+
         }
 
         myfile << std::flush;
