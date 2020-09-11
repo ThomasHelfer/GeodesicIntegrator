@@ -45,7 +45,7 @@ void render_black_hole<data_t>::picture(int *red, int *green, int *blue,
         y_temp = metric.set_norm(y_temp, 0);
 
         double t = time_start;
-        double status;
+        int status = 0;
 
 
         double y[8];
@@ -60,7 +60,7 @@ void render_black_hole<data_t>::picture(int *red, int *green, int *blue,
 
             if (rr < 1 && abs(y[2]) < 0.2)
             {
-                double blue_tmp = 1 - t / y[4];
+                double blue_tmp = 1 - t / y[3];
                 double red_tmp = (rr);
                 red[i_local] = (int)(255 * red_tmp);
                 green[i_local] = 0;

@@ -15,7 +15,7 @@ template <typename data_t> class render_black_hole
     void picture(int *red, int *green, int *blue, Vec3 center, double max_x,
                  double max_y, const int resolution, const double alpha,
                  const int start_ind, int end_ind,
-                 const double time_end = 150.0,const double dt = 0.1, const double time_start = 0);
+                 const double time_end = 150.0,const double dt = 0.05, const double time_start = 0);
 
     void render_circle(int *red, int *green, int *blue, double max_x,
                        double max_y, const int resolution, const int start_ind,
