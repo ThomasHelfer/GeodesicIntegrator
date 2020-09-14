@@ -7,7 +7,7 @@ tensor<2, double> Black_Hole_isometric::get_metric(double M, double x, double y,
     double r = sqrt(x*x+y*y+z*z);
     const double psi = 1.0 + M/(2.0*r);
     FOR2(i,j) g[i][j] = 0;
-    FOR1(i) g[i][i] = psi*psi*psi*psi;
+    for(int i=0; i < 3; i++) g[i][i] = psi*psi*psi*psi;
 
     const double alpha = (1.0 - M/(2.*r))/(1.0 + M/(2.*r));
 
