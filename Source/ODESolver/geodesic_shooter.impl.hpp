@@ -49,10 +49,12 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int numberofgeod
         // ========== Integration and output ===
         while (t <= time_end && status == 0  )
         {
-            status = ODE_Solver(sys, y, t, t+dt, NumberOutputs,hstart,  epsabs, epsrel,nmax);
+            Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
+            const auto norm = metric.calculate_norm(v);
             myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
-                   << "   " << t << "\n";
+               << "   "  << norm  <<   "\n";
 
+            status = ODE_Solver(sys, y, t, t+dt, NumberOutputs,hstart,  epsabs, epsrel,nmax);
             t+= dt;
 
         }

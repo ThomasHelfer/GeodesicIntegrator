@@ -13,11 +13,11 @@ tensor<2, double> Black_Hole_maximal_slicing_isometric::get_metric(double M, dou
     double betasquared = 0;
 
     const double R = sqrt(x*x+y*y+z*z);
-//    const double r = R*(1.0 - M/R - M*M/(2*R*R));
+    const double r = R*(1.0 - M/R - M*M/(2*R*R));
 
-    const double r = (2.0*R + M + sqrt(4.0*R*R+4.0*M*R+3*M*M))/4.0 *
+/*    const double r = (2.0*R + M + sqrt(4.0*R*R+4.0*M*R+3*M*M))/4.0 *
        pow(((4.0 + 3.0*sqrt(2))*(2.0*R - 3*M ) )/(8.0*R + 6.0*M + 3*sqrt( 8.0 * R*R + 8.0 * M * R + 6.0 * M*M )),1.0/sqrt(2.0) ) ;
-
+*/
     normal[0] = x/R;
     normal[1] = y/R;
     normal[2] = z/R;
@@ -92,33 +92,6 @@ tensor<3, double> Black_Hole_maximal_slicing_isometric::get_metric_deriv(double 
     return dg;
 }
 
-// Calculate inverse, only true for this metric, not a general 4x4 inversion
-tensor<2, double> Black_Hole_maximal_slicing_isometric::calculate_spatial_inverse(tensor<2, double> g)
-{
-    tensor<2, double> g_UU;
-
-    FOR2(i, j) { g_UU[i][j] = 0; }
-
-    double det = g[0][0] * (g[1][1] * g[2][2] - g[1][2] * g[2][1]) -
-                 g[0][1] * (g[2][2] * g[1][0] - g[1][2] * g[2][0]) +
-                 g[0][2] * (g[1][0] * g[2][1] - g[1][1] * g[2][0]);
-
-    double det_inverse = 1.0 / det;
-
-    g_UU[0][0] = (g[1][1] * g[2][2] - g[1][2] * g[1][2]) * det_inverse;
-    g_UU[0][1] = (g[0][2] * g[1][2] - g[0][1] * g[2][2]) * det_inverse;
-    g_UU[0][2] = (g[0][1] * g[1][2] - g[0][2] * g[1][1]) * det_inverse;
-    g_UU[1][1] = (g[0][0] * g[2][2] - g[0][2] * g[0][2]) * det_inverse;
-    g_UU[1][2] = (g[0][1] * g[0][2] - g[0][0] * g[1][2]) * det_inverse;
-    g_UU[2][2] = (g[0][0] * g[1][1] - g[0][1] * g[0][1]) * det_inverse;
-    g_UU[1][0] = g_UU[0][1];
-    g_UU[2][0] = g_UU[0][2];
-    g_UU[2][1] = g_UU[1][2];
-
-    g_UU[3][3] = 1.0 / g[3][3];
-
-    return g_UU;
-}
 
 tensor<3, double> Black_Hole_maximal_slicing_isometric::get_chris(tensor<2, double> g_UU,
                                         tensor<3, double> dg)
@@ -202,7 +175,7 @@ int Black_Hole_maximal_slicing_isometric::eval_diff_eqn(double t, const double y
 
     g = get_metric(M, v.x, v.y, v.z);
 
-    g_UU = calculate_spatial_inverse(g);
+    g_UU = TensorAlgebra::compute_inverse(g);
 
     dg = get_metric_deriv(M, v.x, v.y, v.z);
 
@@ -253,7 +226,7 @@ Vec3 Black_Hole_maximal_slicing_isometric::set_norm(Vec3 v, double norm_val, dou
         }
     }
 
-    v.vt = (-b - sqrt(discriminant))/(2.0*g[3][3]);
+     v.vt = (-b - sqrt(discriminant))/(2.0*g[3][3]);
 
     return v;
 }

@@ -12,7 +12,7 @@
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
 #include "isometric.hpp"
-
+#include "maximalslicing.hpp"
 
 int main(void)
 {
@@ -23,15 +23,15 @@ int main(void)
     // Setting up inital data
 
     const double center_x = 0.0;
-    const double center_y = 5;
+    const double center_y = 2;
     const double center_z = 0.0;
     const double start_time = 0.0;
     const double velocity_x = 0.0;
     const double velocity_y = 1.0;
     const double velocity_z = 0.0;
 
-    const double shift_y = -0.05;
-    const int numberofgeodesics = 100;
+    const double shift_y = -0.1;
+    const int numberofgeodesics = 20;
 
     const double lapse = -1.0;
     const bool null_geodesic = true;
@@ -41,7 +41,7 @@ int main(void)
     const Vec3 initial_data(center_x, center_y, center_z, start_time,
                             velocity_x, velocity_y, velocity_z, lapse);
 
-    geodesic_shooter<Black_Hole_isometric> pewpew;
+    geodesic_shooter<Black_Hole_maximal_slicing_isometric> pewpew;
 
     pewpew.shoot(initial_data, shift_y, numberofgeodesics, null_geodesic, end_time, start_time,
                  dt);
