@@ -27,6 +27,7 @@ tensor<2, double> Black_Hole_maximal_slicing_isometric::get_metric(double M, dou
     const double alpha = sqrt(1.0 - 2.0*M/R + 27.*M*M*M*M/(16.0*R*R*R*R) );
 
     for(i=0;i<3;i++){
+        beta[i] = 0;
         for(j=0;j<3;j++){
             gamma[i][j] = 0;
         }
@@ -34,10 +35,9 @@ tensor<2, double> Black_Hole_maximal_slicing_isometric::get_metric(double M, dou
 
     for(i=0;i<3;i++) gamma[i][i] = psi*psi*psi*psi;
 
-    for(i=0;i<3;i++) beta_u[i] = 3.0*sqrt(3.0)*M*M/4.0*r/(R*R*R)*normal[i] ;
+    for(i=0;i<3;i++) beta_u[i] =  3.0*sqrt(3.0)*M*M/4.0*r/(R*R*R)*normal[i] ;
 
     for(i=0;i<3;i++){
-        beta[i] = 0;
         for(j=0;j<3;j++){
             beta[i] += gamma[i][j]*beta_u[j];
         }
@@ -75,7 +75,7 @@ tensor<3, double> Black_Hole_maximal_slicing_isometric::get_metric_deriv(double 
     tensor<2, double> g_dx;
     tensor<2, double> g_dy;
     tensor<2, double> g_dz;
-    double h = 1e-8;
+    double h = 1e-10;
 
     g = get_metric(M, x, y, z);
     g_dx = get_metric(M, x - h, y, z);
@@ -241,7 +241,19 @@ Vec3 Black_Hole_maximal_slicing_isometric::set_norm(Vec3 v, double norm_val, dou
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
     tensor<2, double> g = get_metric(M, v.x, v.y, v.z);
 
-    double tmp = norm - g[3][3] * dx[3] * dx[3];
-    v.vt = sqrt(1.0 / g[3][3] * (norm_val - tmp));
+    double b = 0;
+    for(int i = 0; i < 3; i++){
+        b += g[i][3]*dx[i] + g[3][i]*dx[i];
+    }
+
+    double discriminant= b*b;
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+        discriminant += -(4*g[3][3]*g[i][j]*dx[i]*dx[j]);
+        }
+    }
+
+    v.vt = (-b - sqrt(discriminant))/(2.0*g[3][3]);
+
     return v;
 }
