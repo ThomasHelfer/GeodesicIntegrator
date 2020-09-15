@@ -44,8 +44,8 @@ struct Vec3
         std::cout << "t " << t << "\n";
     }
 
-    void write_to_array(double w[]){
-
+    void write_to_array(double w[])
+    {
 
         w[0] = x;
         w[1] = y;
@@ -55,10 +55,7 @@ struct Vec3
         w[5] = vy;
         w[6] = vz;
         w[7] = vt;
-
     }
-
-
 };
 
 #endif

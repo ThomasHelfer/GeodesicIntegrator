@@ -140,7 +140,8 @@ tensor<3, double> Black_Hole::get_chris(tensor<2, double> g_UU,
     return chris_ULL;
 }
 
-int Black_Hole::eval_diff_eqn(double t, const double y[], double f[], void *params)
+int Black_Hole::eval_diff_eqn(double t, const double y[], double f[],
+                              void *params)
 {
 
     double M = 1;
@@ -150,7 +151,7 @@ int Black_Hole::eval_diff_eqn(double t, const double y[], double f[], void *para
     tensor<3, double> chris_ULL; // Christoffel index high low low
     tensor<2, double> jacobian = {};
 
-    Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
+    Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
 
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
     tensor<1, double> ddx;
@@ -180,17 +181,17 @@ int Black_Hole::eval_diff_eqn(double t, const double y[], double f[], void *para
 
     // Freezing out geodesics that are too close to Horizon (Metric is singular
     // at horizon)
-/*    if (rr < 2 * M + eps)
-    {
-        FOR1(i)
+    /*    if (rr < 2 * M + eps)
         {
-            ddx[i] = 0;
-            dx[i] = 0;
+            FOR1(i)
+            {
+                ddx[i] = 0;
+                dx[i] = 0;
+            }
+            Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2],
+       ddx[3]); return out;
         }
-        Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2], ddx[3]);
-        return out;
-    }
-*/
+    */
     // ====================
 
     g = get_metric(M, v.x, v.y, v.z);
@@ -215,7 +216,6 @@ int Black_Hole::eval_diff_eqn(double t, const double y[], double f[], void *para
     out.write_to_array(f);
 
     return GSL_SUCCESS;
-
 }
 
 double Black_Hole::calculate_norm(Vec3 v, double M)

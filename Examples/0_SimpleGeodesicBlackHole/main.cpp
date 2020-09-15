@@ -41,8 +41,8 @@ int main(void)
 
     geodesic_shooter<Black_Hole> pewpew;
 
-    pewpew.shoot(initial_data, shift_y, numberofgeodesics, null_geodesic, end_time, start_time,
-                 dt);
+    pewpew.shoot(initial_data, shift_y, numberofgeodesics, null_geodesic,
+                 end_time, start_time, dt);
 
     return 0;
 }

@@ -5,16 +5,15 @@
 #ifndef GEODESIC_SHOOTER_IMPL_HPP
 #define GEODESIC_SHOOTER_IMPL_HPP
 
-
 template <typename data_t>
-void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int numberofgeodesics,
+void geodesic_shooter<data_t>::shoot(Vec3 center, double shift,
+                                     int numberofgeodesics,
                                      bool set_geodesic_null,
                                      const double time_end,
                                      const double time_start, const double dt)
 {
     data_t metric;
-    gsl_odeiv2_system sys = {metric.eval_diff_eqn,
-                            nullptr, 8};
+    gsl_odeiv2_system sys = {metric.eval_diff_eqn, nullptr, 8};
 
     const int NumberOutputs = 1;
     const double epsabs = 1e-6;
@@ -47,16 +46,16 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift, int numberofgeod
         int status = 0;
 
         // ========== Integration and output ===
-        while (t <= time_end && status == 0  )
+        while (t <= time_end && status == 0)
         {
-            Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
+            Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
             const auto norm = metric.calculate_norm(v);
-            myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
-               << "   "  << norm  <<   "\n";
+            myfile << y[0] << "       " << y[1] << "   " << y[2] << "   "
+                   << y[3] << "   " << norm << "\n";
 
-            status = ODE_Solver(sys, y, t, t+dt, NumberOutputs,hstart,  epsabs, epsrel,nmax);
-            t+= dt;
-
+            status = ODE_Solver(sys, y, t, t + dt, NumberOutputs, hstart,
+                                epsabs, epsrel, nmax);
+            t += dt;
         }
 
         myfile << std::flush;

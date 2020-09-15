@@ -1,23 +1,25 @@
 #include "isometric.hpp"
 
-tensor<2, double> Black_Hole_isometric::get_metric(double M, double x, double y, double z)
+tensor<2, double> Black_Hole_isometric::get_metric(double M, double x, double y,
+                                                   double z)
 {
 
-    tensor<2, double> g ;
-    double r = sqrt(x*x+y*y+z*z);
-    const double psi = 1.0 + M/(2.0*r);
-    FOR2(i,j) g[i][j] = 0;
-    for(int i=0; i < 3; i++) g[i][i] = psi*psi*psi*psi;
+    tensor<2, double> g;
+    double r = sqrt(x * x + y * y + z * z);
+    const double psi = 1.0 + M / (2.0 * r);
+    FOR2(i, j) g[i][j] = 0;
+    for (int i = 0; i < 3; i++)
+        g[i][i] = psi * psi * psi * psi;
 
-    const double alpha = (1.0 - M/(2.*r))/(1.0 + M/(2.*r));
+    const double alpha = (1.0 - M / (2. * r)) / (1.0 + M / (2. * r));
 
-    g[3][3] = -alpha*alpha;
+    g[3][3] = -alpha * alpha;
 
     return g;
 }
 
-tensor<3, double> Black_Hole_isometric::get_metric_deriv(double M, double x, double y,
-                                               double z)
+tensor<3, double> Black_Hole_isometric::get_metric_deriv(double M, double x,
+                                                         double y, double z)
 {
 
     tensor<3, double> dg;
@@ -43,7 +45,8 @@ tensor<3, double> Black_Hole_isometric::get_metric_deriv(double M, double x, dou
 }
 
 // Calculate inverse, only true for this metric, not a general 4x4 inversion
-tensor<2, double> Black_Hole_isometric::calculate_spatial_inverse(tensor<2, double> g)
+tensor<2, double>
+Black_Hole_isometric::calculate_spatial_inverse(tensor<2, double> g)
 {
     tensor<2, double> g_UU;
 
@@ -71,7 +74,7 @@ tensor<2, double> Black_Hole_isometric::calculate_spatial_inverse(tensor<2, doub
 }
 
 tensor<3, double> Black_Hole_isometric::get_chris(tensor<2, double> g_UU,
-                                        tensor<3, double> dg)
+                                                  tensor<3, double> dg)
 {
 
     // Init
@@ -97,7 +100,8 @@ tensor<3, double> Black_Hole_isometric::get_chris(tensor<2, double> g_UU,
     return chris_ULL;
 }
 
-int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[], void *params)
+int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[],
+                                        void *params)
 {
 
     double M = 1;
@@ -107,7 +111,7 @@ int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[], 
     tensor<3, double> chris_ULL; // Christoffel index high low low
     tensor<2, double> jacobian = {};
 
-    Vec3 v(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7]);
+    Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
 
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
     tensor<1, double> ddx;
@@ -137,17 +141,17 @@ int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[], 
 
     // Freezing out geodesics that are too close to Horizon (Metric is singular
     // at horizon)
-/*    if (rr < 2 * M + eps)
-    {
-        FOR1(i)
+    /*    if (rr < 2 * M + eps)
         {
-            ddx[i] = 0;
-            dx[i] = 0;
+            FOR1(i)
+            {
+                ddx[i] = 0;
+                dx[i] = 0;
+            }
+            Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2],
+       ddx[3]); return out;
         }
-        Vec3 out(dx[0], dx[1], dx[2], dx[3], ddx[0], ddx[1], ddx[2], ddx[3]);
-        return out;
-    }
-*/
+    */
     // ====================
 
     g = get_metric(M, v.x, v.y, v.z);
@@ -172,7 +176,6 @@ int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[], 
     out.write_to_array(f);
 
     return GSL_SUCCESS;
-
 }
 
 double Black_Hole_isometric::calculate_norm(Vec3 v, double M)

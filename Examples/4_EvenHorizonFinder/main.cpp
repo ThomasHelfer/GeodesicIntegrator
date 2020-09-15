@@ -7,12 +7,12 @@
 
 #include "DimensionDefinitions.hpp"
 #include "geodesic_shooter.hpp"
+#include "isometric.hpp"
+#include "maximalslicing.hpp"
 #include "render.hpp"
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "tensor.hpp"
-#include "isometric.hpp"
-#include "maximalslicing.hpp"
 
 int main(void)
 {
@@ -43,8 +43,8 @@ int main(void)
 
     geodesic_shooter<Black_Hole_maximal_slicing_isometric> pewpew;
 
-    pewpew.shoot(initial_data, shift_y, numberofgeodesics, null_geodesic, end_time, start_time,
-                 dt);
+    pewpew.shoot(initial_data, shift_y, numberofgeodesics, null_geodesic,
+                 end_time, start_time, dt);
 
     return 0;
 }

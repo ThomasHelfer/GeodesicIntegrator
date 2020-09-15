@@ -6,13 +6,12 @@
 #include <sstream>
 #include <string>
 
-#include "Rk4vec.hpp"
 #include "ODESolverCore.hpp"
+#include "Rk4vec.hpp"
 
 template <typename data_t> class geodesic_shooter
 {
-    public:
-
+  public:
     void shoot(Vec3 center, double shift = 1 / 5., int numberofgeodesics = 10,
                bool set_geodesic_null = true, const double time_end = 150.0,
                const double time_start = 0.0, const double dt = 0.1);
