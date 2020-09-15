@@ -109,33 +109,6 @@ tensor<3, double> Oscilloton::get_metric_deriv(double M, double x, double y,
     return dg;
 }
 
-// Calculate inverse, only true for this metric, not a general 4x4 inversion
-tensor<2, double> Oscilloton::calculate_spatial_inverse(tensor<2, double> g)
-{
-    tensor<2, double> g_UU;
-
-    FOR2(i, j) { g_UU[i][j] = 0; }
-
-    double det = g[0][0] * (g[1][1] * g[2][2] - g[1][2] * g[2][1]) -
-                 g[0][1] * (g[2][2] * g[1][0] - g[1][2] * g[2][0]) +
-                 g[0][2] * (g[1][0] * g[2][1] - g[1][1] * g[2][0]);
-
-    double det_inverse = 1.0 / det;
-
-    g_UU[0][0] = (g[1][1] * g[2][2] - g[1][2] * g[1][2]) * det_inverse;
-    g_UU[0][1] = (g[0][2] * g[1][2] - g[0][1] * g[2][2]) * det_inverse;
-    g_UU[0][2] = (g[0][1] * g[1][2] - g[0][2] * g[1][1]) * det_inverse;
-    g_UU[1][1] = (g[0][0] * g[2][2] - g[0][2] * g[0][2]) * det_inverse;
-    g_UU[1][2] = (g[0][1] * g[0][2] - g[0][0] * g[1][2]) * det_inverse;
-    g_UU[2][2] = (g[0][0] * g[1][1] - g[0][1] * g[0][1]) * det_inverse;
-    g_UU[1][0] = g_UU[0][1];
-    g_UU[2][0] = g_UU[0][2];
-    g_UU[2][1] = g_UU[1][2];
-
-    g_UU[3][3] = 1.0 / g[3][3];
-
-    return g_UU;
-}
 
 tensor<3, double> Oscilloton::get_chris(tensor<2, double> g_UU,
                                         tensor<3, double> dg)
@@ -222,7 +195,7 @@ int Oscilloton::eval_diff_eqn(double t, const double y[], double f[],
 
     g = get_metric(M, v.x, v.y, v.z, v.t);
 
-    g_UU = calculate_spatial_inverse(g);
+    g_UU = TensorAlgebra::compute_inverse(g);
 
     dg = get_metric_deriv(M, v.x, v.y, v.z, v.t);
 

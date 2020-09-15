@@ -8,6 +8,7 @@
 #include "DimensionDefinitions.hpp"
 #include "Rk4vec.hpp"
 #include "tensor.hpp"
+#include "TensorAlgebra.hpp"
 
 using namespace std;
 
@@ -20,8 +21,6 @@ class Black_Hole
     static tensor<3, double> get_metric_deriv(double M, double x, double y,
                                               double z);
 
-    // Calculate inverse, only true for this metric, not a general 4x4 inversion
-    static tensor<2, double> calculate_spatial_inverse(tensor<2, double> g);
 
     static tensor<3, double> get_chris(tensor<2, double> g_UU,
                                        tensor<3, double> dg);
