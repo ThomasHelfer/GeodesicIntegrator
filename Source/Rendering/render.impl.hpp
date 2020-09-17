@@ -48,8 +48,8 @@ void render_black_hole<data_t>::picture(
 
         while ((t <= time_end) && draw && status == 0)
         {
-            status = ODE_Solver(sys, y, t, t + dt, hstart,
-                                epsabs, epsrel, nmax);
+            status =
+                ODE_Solver(sys, y, t, t + dt, hstart, epsabs, epsrel, nmax);
             t += dt;
 
             double rr = abs(sqrt((y[0]) * (y[0]) + (y[1]) * (y[1])) - 6.5);

@@ -1,8 +1,8 @@
 #include "ODESolverCore.hpp"
 
 int ODE_Solver(gsl_odeiv2_system sys, double y[], const double time_start,
-               const double time_end,  const double hstart, const double epsabs, const double epsrel,
-               const int nmax)
+               const double time_end, const double hstart, const double epsabs,
+               const double epsrel, const int nmax)
 {
 
     gsl_odeiv2_driver *d = gsl_odeiv2_driver_alloc_y_new(
@@ -15,12 +15,11 @@ int ODE_Solver(gsl_odeiv2_system sys, double y[], const double time_start,
 
     int status = gsl_odeiv2_driver_apply(d, &t, time_end, y);
 
-        if (status != GSL_SUCCESS)
-        {
-            printf("error, return value=%d\n", status);
-            return status;
-        }
-
+    if (status != GSL_SUCCESS)
+    {
+        printf("error, return value=%d\n", status);
+        return status;
+    }
 
     gsl_odeiv2_driver_free(d);
 

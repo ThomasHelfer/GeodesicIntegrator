@@ -7,8 +7,8 @@
 
 #include "DimensionDefinitions.hpp"
 #include "Rk4vec.hpp"
-#include "tensor.hpp"
 #include "TensorAlgebra.hpp"
+#include "tensor.hpp"
 
 class Black_Hole_isometric
 {
@@ -18,7 +18,6 @@ class Black_Hole_isometric
 
     static tensor<3, double> get_metric_deriv(double M, double x, double y,
                                               double z);
-
 
     static tensor<3, double> get_chris(tensor<2, double> g_UU,
                                        tensor<3, double> dg);

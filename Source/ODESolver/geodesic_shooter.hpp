@@ -16,11 +16,11 @@ template <typename data_t> class geodesic_shooter
                bool set_geodesic_null = true, const double time_end = 150.0,
                const double time_start = 0.0, const double dt = 0.1);
 
-    void single_shot(double y[], const int index = 0,  const double time_end = 150.0,
-               const double time_start = 0.0, const double dt = 0.1,const double epsabs = 1e-6,
-               const double epsrel = 1e-6, const double hstart = 1e-6,const int nmax = 1000);
-
-
+    void single_shot(double y[], const int index = 0,
+                     const double time_end = 150.0,
+                     const double time_start = 0.0, const double dt = 0.1,
+                     const double epsabs = 1e-6, const double epsrel = 1e-6,
+                     const double hstart = 1e-6, const int nmax = 1000);
 };
 
 #include "geodesic_shooter.impl.hpp"

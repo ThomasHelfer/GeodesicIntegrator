@@ -85,7 +85,6 @@ tensor<3, double> Black_Hole::get_metric_deriv(double M, double x, double y,
     return dg;
 }
 
-
 tensor<3, double> Black_Hole::get_chris(tensor<2, double> g_UU,
                                         tensor<3, double> dg)
 {

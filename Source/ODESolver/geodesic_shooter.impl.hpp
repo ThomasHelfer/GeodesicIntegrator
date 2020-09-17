@@ -33,52 +33,53 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift,
         double y[8];
         y_temp.write_to_array(y);
 
-        single_shot(y,i,time_end,time_start,dt,epsabs,epsrel,hstart,nmax);
+        single_shot(y, i, time_end, time_start, dt, epsabs, epsrel, hstart,
+                    nmax);
 
-    /*
+        /*
 
-        double t = time_start;
+            double t = time_start;
 
-        // ========= Preparing output ==========
-        std::string imgname = "xpos";
-        char cbuff[20];
-        std::sprintf(cbuff, "%03d", i);
-        imgname.append(cbuff);
-        imgname.append(".csv");
-        std::ofstream myfile(imgname);
-        int status = 0;
+            // ========= Preparing output ==========
+            std::string imgname = "xpos";
+            char cbuff[20];
+            std::sprintf(cbuff, "%03d", i);
+            imgname.append(cbuff);
+            imgname.append(".csv");
+            std::ofstream myfile(imgname);
+            int status = 0;
 
-        // ========== Integration and output ===
-        while (t <= time_end && status == 0)
-        {
-            Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
-            const auto norm = metric.calculate_norm(v);
-            myfile << y[0] << "       " << y[1] << "   " << y[2] << "   "
-                   << y[3] << "   " << norm << "\n";
+            // ========== Integration and output ===
+            while (t <= time_end && status == 0)
+            {
+                Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
+                const auto norm = metric.calculate_norm(v);
+                myfile << y[0] << "       " << y[1] << "   " << y[2] << "   "
+                       << y[3] << "   " << norm << "\n";
 
-            status = ODE_Solver(sys, y, t, t + dt, NumberOutputs, hstart,
-                                epsabs, epsrel, nmax);
-            t += dt;
-        }
+                status = ODE_Solver(sys, y, t, t + dt, NumberOutputs, hstart,
+                                    epsabs, epsrel, nmax);
+                t += dt;
+            }
 
-        myfile << std::flush;
+            myfile << std::flush;
 
-        // ========== clean up ==================
-        myfile.close();
-*/
+            // ========== clean up ==================
+            myfile.close();
+    */
     }
 };
 
 template <typename data_t>
-void geodesic_shooter<data_t>::single_shot(double y[],
-                                     const int index,
-                                     const double time_end,
-                                     const double time_start, const double dt,const double epsabs,const double epsrel,const double hstart,const int nmax)
+void geodesic_shooter<data_t>::single_shot(double y[], const int index,
+                                           const double time_end,
+                                           const double time_start,
+                                           const double dt, const double epsabs,
+                                           const double epsrel,
+                                           const double hstart, const int nmax)
 {
     data_t metric;
     gsl_odeiv2_system sys = {metric.eval_diff_eqn, nullptr, 8};
-
-
 
     double t = time_start;
 
@@ -92,22 +93,20 @@ void geodesic_shooter<data_t>::single_shot(double y[],
     int status = 0;
 
     // ========== Integration and output ===
-        while (t <= time_end && status == 0)
-        {
-            Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
-            const auto norm = metric.calculate_norm(v);
-            myfile << y[0] << "       " << y[1] << "   " << y[2] << "   "
-                   << y[3] << "   " << norm << "\n";
+    while (t <= time_end && status == 0)
+    {
+        Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
+        const auto norm = metric.calculate_norm(v);
+        myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
+               << "   " << norm << "\n";
 
-            status = ODE_Solver(sys, y, t, t + dt,  hstart,
-                                epsabs, epsrel, nmax);
-            t += dt;
-        }
+        status = ODE_Solver(sys, y, t, t + dt, hstart, epsabs, epsrel, nmax);
+        t += dt;
+    }
 
     myfile << std::flush;
 
     // ========== clean up ==================
     myfile.close();
-
 };
 #endif
