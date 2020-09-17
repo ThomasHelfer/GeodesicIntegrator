@@ -5,6 +5,33 @@
 
 namespace TensorAlgebra
 {
+
+inline tensor<3, double> get_chris(const tensor<2, double> g_UU, const tensor<3, double> dg)
+{
+
+    // Init
+    tensor<3, double> chris_LLL; // Christoffel index low low low
+    tensor<3, double> chris_ULL; // Christoffel index high low low
+
+    FOR3(i, j, k)
+    {
+        chris_LLL[i][j][k] = 0;
+        chris_ULL[i][j][k] = 0;
+    }
+    // Calculation of Christoffel symbols
+    FOR3(i, j, k)
+    {
+        chris_LLL[i][j][k] = 0.5 * (dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
+    }
+    FOR3(i, j, k)
+    {
+        chris_ULL[i][j][k] = 0;
+        FOR1(l) { chris_ULL[i][j][k] += g_UU[i][l] * chris_LLL[l][j][k]; }
+    }
+
+    return chris_ULL;
+}
+
 /// Computes the inverse of a general 3x3 matrix.
 /// Note: for a symmetric matrix use the simplified function
 template <class data_t>

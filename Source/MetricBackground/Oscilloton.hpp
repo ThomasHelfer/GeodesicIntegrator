@@ -44,8 +44,6 @@ class Oscilloton
     static tensor<3, double> get_metric_deriv(double M, double x, double y,
                                               double z, double t);
 
-    static tensor<3, double> get_chris(tensor<2, double> g_UU,
-                                       tensor<3, double> dg);
 };
 
 #endif

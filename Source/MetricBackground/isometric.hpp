@@ -19,8 +19,6 @@ class Black_Hole_isometric
     static tensor<3, double> get_metric_deriv(double M, double x, double y,
                                               double z);
 
-    static tensor<3, double> get_chris(tensor<2, double> g_UU,
-                                       tensor<3, double> dg);
 
     static int eval_diff_eqn(double t, const double y[], double f[],
                              void *params);

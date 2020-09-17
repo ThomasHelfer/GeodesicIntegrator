@@ -44,32 +44,6 @@ tensor<3, double> Black_Hole_isometric::get_metric_deriv(double M, double x,
     return dg;
 }
 
-tensor<3, double> Black_Hole_isometric::get_chris(tensor<2, double> g_UU,
-                                                  tensor<3, double> dg)
-{
-
-    // Init
-    tensor<3, double> chris_LLL; // Christoffel index low low low
-    tensor<3, double> chris_ULL; // Christoffel index high low low
-
-    FOR3(i, j, k)
-    {
-        chris_LLL[i][j][k] = 0;
-        chris_ULL[i][j][k] = 0;
-    }
-    // Calculation of Christoffel symbols
-    FOR3(i, j, k)
-    {
-        chris_LLL[i][j][k] = 0.5 * (dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
-    }
-    FOR3(i, j, k)
-    {
-        chris_ULL[i][j][k] = 0;
-        FOR1(l) { chris_ULL[i][j][k] += g_UU[i][l] * chris_LLL[l][j][k]; }
-    }
-
-    return chris_ULL;
-}
 
 int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[],
                                         void *params)
@@ -133,7 +107,7 @@ int Black_Hole_isometric::eval_diff_eqn(double t, const double y[], double f[],
 
     //=========================
 
-    chris_ULL = get_chris(g_UU, dg);
+    chris_ULL = TensorAlgebra::get_chris(g_UU, dg);
 
     //=========================
 
