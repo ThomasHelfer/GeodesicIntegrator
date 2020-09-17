@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <random>
 
 #include "DimensionDefinitions.hpp"
 #include "geodesic_shooter.hpp"
@@ -33,6 +34,9 @@ int main(void)
     const bool null_geodesic = true;
     const double end_time = 150;
     const double dt = 0.5;
+
+    std::mt19937 generator (123);
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     double intialdata[8];   intialdata[0] = x; intialdata[1] = y ; intialdata[2] = z;intialdata[3] = t;intialdata[4] = vx;intialdata[5] = vy;intialdata[6] = vz;intialdata[7] = -vt;
 
