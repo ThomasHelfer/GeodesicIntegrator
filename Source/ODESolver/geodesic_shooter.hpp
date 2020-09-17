@@ -8,6 +8,7 @@
 
 #include "ODESolverCore.hpp"
 #include "Rk4vec.hpp"
+#include "TensorAlgebra.hpp"
 
 template <typename data_t> class geodesic_shooter
 {

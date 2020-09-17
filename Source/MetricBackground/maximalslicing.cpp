@@ -216,39 +216,3 @@ int Black_Hole_maximal_slicing_isometric::eval_diff_eqn(double t,
     return GSL_SUCCESS;
 }
 
-double Black_Hole_maximal_slicing_isometric::calculate_norm(Vec3 v, double M)
-{
-    double norm = 0;
-    tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
-    tensor<2, double> g = get_metric(M, v.x, v.y, v.z);
-
-    FOR2(i, j) { norm += g[i][j] * dx[i] * dx[j]; }
-    return norm;
-}
-// Change the vt component to set norm to any value
-Vec3 Black_Hole_maximal_slicing_isometric::set_norm(Vec3 v, double norm_val,
-                                                    double M)
-{
-    double norm = calculate_norm(v);
-    tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
-    tensor<2, double> g = get_metric(M, v.x, v.y, v.z);
-
-    double b = 0;
-    for (int i = 0; i < 3; i++)
-    {
-        b += g[i][3] * dx[i] + g[3][i] * dx[i];
-    }
-
-    double discriminant = b * b;
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            discriminant += -(4 * g[3][3] * g[i][j] * dx[i] * dx[j]);
-        }
-    }
-
-    v.vt = (-b - sqrt(discriminant)) / (2.0 * g[3][3]);
-
-    return v;
-}

@@ -8,7 +8,7 @@ namespace TensorAlgebra
 /// Computes the inverse of a general 3x3 matrix.
 /// Note: for a symmetric matrix use the simplified function
 template <class data_t>
-tensor<2, data_t> compute_inverse(const tensor<2, data_t, 4> &matrix)
+inline tensor<2, data_t> compute_inverse(const tensor<2, data_t, 4> &matrix)
 {
     tensor<2, data_t> h_UU;
 
@@ -95,6 +95,45 @@ tensor<2, data_t> compute_inverse(const tensor<2, data_t, 4> &matrix)
 
     return h_UU;
 }
+
+inline double calculate_norm( const double vx, const  double vy, const  double vz,double vt, const tensor<2,double> g)
+{
+    double norm = 0;
+    tensor<1, double> dx = {vx, vy, vz, vt};
+
+    FOR2(i, j) { norm += g[i][j] * dx[i] * dx[j]; }
+    return norm;
+}
+
+// Change the vt component to set norm to any value
+template<class data_t>
+inline Vec3 set_norm(Vec3 v, const double norm_val, const double M=1)
+{
+    data_t metric;
+    tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
+    tensor<2, double> g = metric.get_metric(M, v.x, v.y, v.z);
+    double norm = calculate_norm(v.vx,v.vy,v.vz,v.vt,g);
+
+    double b = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        b += g[i][3] * dx[i] + g[3][i] * dx[i];
+    }
+
+    double discriminant = b * b;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            discriminant += -(4 * g[3][3] * g[i][j] * dx[i] * dx[j]);
+        }
+    }
+
+    v.vt = (-b - sqrt(discriminant)) / (2.0 * g[3][3]);
+
+    return v;
+}
+
 } // namespace TensorAlgebra
 
 #endif

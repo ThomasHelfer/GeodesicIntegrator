@@ -27,7 +27,7 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift,
         Vec3 y_temp = Y_START + center;
         if (set_geodesic_null)
         {
-            y_temp = data_t::set_norm(y_temp, 0);
+            y_temp = TensorAlgebra::set_norm<data_t>(y_temp, 0);
         }
 
         double y[8];
@@ -36,37 +36,6 @@ void geodesic_shooter<data_t>::shoot(Vec3 center, double shift,
         single_shot(y, i, time_end, time_start, dt, epsabs, epsrel, hstart,
                     nmax);
 
-        /*
-
-            double t = time_start;
-
-            // ========= Preparing output ==========
-            std::string imgname = "xpos";
-            char cbuff[20];
-            std::sprintf(cbuff, "%03d", i);
-            imgname.append(cbuff);
-            imgname.append(".csv");
-            std::ofstream myfile(imgname);
-            int status = 0;
-
-            // ========== Integration and output ===
-            while (t <= time_end && status == 0)
-            {
-                Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
-                const auto norm = metric.calculate_norm(v);
-                myfile << y[0] << "       " << y[1] << "   " << y[2] << "   "
-                       << y[3] << "   " << norm << "\n";
-
-                status = ODE_Solver(sys, y, t, t + dt, NumberOutputs, hstart,
-                                    epsabs, epsrel, nmax);
-                t += dt;
-            }
-
-            myfile << std::flush;
-
-            // ========== clean up ==================
-            myfile.close();
-    */
     }
 };
 
@@ -95,8 +64,8 @@ void geodesic_shooter<data_t>::single_shot(double y[], const int index,
     // ========== Integration and output ===
     while (t <= time_end && status == 0)
     {
-        Vec3 v(y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7]);
-        const auto norm = metric.calculate_norm(v);
+        tensor<2,double> g = metric.get_metric(1,y[0],y[1],y[2]);
+        const auto norm = TensorAlgebra::calculate_norm(y[4],y[5],y[6],y[7],g);
         myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
                << "   " << norm << "\n";
 
