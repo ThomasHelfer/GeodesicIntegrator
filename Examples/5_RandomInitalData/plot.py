@@ -93,7 +93,7 @@ refNorm = pos[4][0];
 plt.figure(figsize=(14, 14), dpi=200)
 for pos in data:
     ref = pos[4][0]
-    plt.plot(pos[3],pos[4])#abs(pos[4]-ref)/ref*100)
+    plt.plot(pos[3],pos[4])
 plt.xlabel(r'$t~[M^{-1}]$')
 plt.ylabel(r'$||\partial x/ \partial \tau ||$')
 #plt.xlim(-40,max(time_2)/minit[1])
