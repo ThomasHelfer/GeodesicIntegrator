@@ -18,7 +18,6 @@ void render_black_hole<data_t>::picture(
 
     gsl_odeiv2_system sys = {metric.eval_diff_eqn, nullptr, 8};
 
-    const int NumberOutputs = 1;
     const double epsabs = 1e-6;
     const double epsrel = 1e-6;
     const double hstart = 1e-6;
@@ -49,7 +48,7 @@ void render_black_hole<data_t>::picture(
 
         while ((t <= time_end) && draw && status == 0)
         {
-            status = ODE_Solver(sys, y, t, t + dt, NumberOutputs, hstart,
+            status = ODE_Solver(sys, y, t, t + dt, hstart,
                                 epsabs, epsrel, nmax);
             t += dt;
 
