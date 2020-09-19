@@ -13,6 +13,7 @@
 #include "rk4.hpp"
 #include "schwarzschild.hpp"
 #include "isometric.hpp"
+#include "isometric_time_dependent.hpp"
 #include "tensor.hpp"
 
 int main(void)
@@ -24,8 +25,8 @@ int main(void)
     // Setting up inital data
     const int seed = 231;
     std::mt19937 generator(seed);
-    std::uniform_real_distribution<double> velocity_rnd(0.1, 0.4);
-    std::uniform_real_distribution<double> pos_rnd(3, 20);
+    std::uniform_real_distribution<double> velocity_rnd(0.01, 0.4);
+    std::uniform_real_distribution<double> pos_rnd(3, 200);
 
 
     int numtasks, rank, size, size_per_task ;
@@ -53,8 +54,8 @@ int main(void)
     const int nmax = 0;
 
     const double start_time = 0;
-    const double end_time = 100000;
-    const double dt = 1.0;
+    const double end_time = 10000;
+    const double dt = 50.0;
     double duration;
     double intialdata[8];
 
@@ -71,7 +72,7 @@ int main(void)
         intialdata[6] = vz;
         intialdata[7] = -vt;
 
-        geodesic_shooter<Black_Hole_isometric> pewpew;
+        geodesic_shooter<Black_Hole_isometric_time_dependent> pewpew;
 
         pewpew.single_shot(intialdata, index, end_time, start_time, dt, epsabs, epsrel, hstart, nmax);
 
