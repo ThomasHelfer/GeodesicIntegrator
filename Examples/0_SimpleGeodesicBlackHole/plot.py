@@ -81,8 +81,8 @@ for pos in data:
     ind += 1 
 plt.xlabel(r'$x~[M^{-1}]$')
 plt.ylabel(r'$y~[M^{-1}]$')
-plt.xlim([-20,20])
-plt.ylim([-20,20])
+plt.xlim([-30,30])
+plt.ylim([-30,30])
 plt.legend()
 plt.grid()
 plt.savefig("gedodesic.png",bbox_inches = 'tight')
@@ -102,4 +102,23 @@ plt.ylabel(r'$||\partial x/ \partial \tau ||$')
 plt.legend()
 plt.grid()
 plt.savefig("time_xpos.png",bbox_inches = 'tight')
+plt.close()
+
+# Get final angle
+
+plt.figure(figsize=(14, 14), dpi=200)
+b_arr = []
+for pos in data:
+    xdiff = np.diff(pos[0])
+    ydiff = np.diff(pos[1])
+    theta = -np.arctan2(ydiff[-3],xdiff[-3]) + np.pi
+    b = np.abs(pos[1][0])
+    b_arr.append(b)
+    plt.scatter(b,theta)
+b = np.linspace(2.,max(b_arr),100)
+plt.plot(b,4./b,color = 'red',label = 'Newtonian')
+#plt.ylim([0,np.pi])
+plt.xlabel(r'Impact parameter $b$')
+plt.ylabel(r'Deflection Angle $\delta\theta$')
+plt.savefig('deflection_angle.png')
 plt.close()
