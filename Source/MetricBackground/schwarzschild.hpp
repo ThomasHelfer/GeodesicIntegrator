@@ -16,10 +16,10 @@ class Black_Hole
 {
 
   public:
-    static tensor<2, double> get_metric(double M, double x, double y, double z);
+    static tensor<2, double> get_metric(double M, double x, double y, double z,double t);
 
     static tensor<3, double> get_metric_deriv(double M, double x, double y,
-                                              double z);
+                                              double z, double t);
 
 
     static int eval_diff_eqn(double t, const double y[], double f[],

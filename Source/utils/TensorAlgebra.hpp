@@ -138,7 +138,7 @@ inline Vec3 set_norm(Vec3 v, const double norm_val, const double M=1)
 {
     data_t metric;
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
-    tensor<2, double> g = metric.get_metric(M, v.x, v.y, v.z);
+    tensor<2, double> g = metric.get_metric(M, v.x, v.y, v.z, v.t);
     double norm = calculate_norm(v.vx,v.vy,v.vz,v.vt,g);
 
     double b = 0;

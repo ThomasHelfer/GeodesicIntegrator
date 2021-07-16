@@ -64,7 +64,7 @@ void geodesic_shooter<data_t>::single_shot(double y[], const int index,
     // ========== Integration and output ===
     while (t <= time_end && status == 0)
     {
-        tensor<2,double> g = metric.get_metric(1,y[0],y[1],y[2]);
+        tensor<2,double> g = metric.get_metric(1,y[0],y[1],y[2],y[3]);
         const auto norm = TensorAlgebra::calculate_norm(y[4],y[5],y[6],y[7],g);
         myfile << y[0] << "       " << y[1] << "   " << y[2] << "   " << y[3]
                << "   " << norm << "\n";

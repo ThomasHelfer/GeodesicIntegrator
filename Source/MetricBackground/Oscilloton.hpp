@@ -15,6 +15,8 @@
 #include "TensorAlgebra.hpp"
 #include "tensor.hpp"
 
+// These are some definitions relevant for reading in Oscilloton data
+
 #define column_max 8
 #define row_max 2600
 #define spacing 0.01
@@ -37,7 +39,6 @@ class Oscilloton
 
     static double get_c202(double rr, int component);
 
-  private:
     static tensor<2, double> get_metric(double M, double x, double y, double z,
                                         double t);
 
