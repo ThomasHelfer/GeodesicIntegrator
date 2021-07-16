@@ -25,7 +25,7 @@ int main(void)
 
     int numtasks, rank, sendcount, recvcount, source;
     int size_per_task;
-    const int resolution = 100;
+    const int resolution = 10;
 
     // ============= MPI INIT ================
 
