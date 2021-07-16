@@ -38,7 +38,7 @@ void render_black_hole<data_t>::picture(
 
         // Making it a null - geodesic
         Vec3 y_temp = Y_START;
-        y_temp = metric.set_norm(y_temp, 0);
+        y_temp = TensorAlgebra::set_norm<data_t>(y_temp, 0);
 
         double t = time_start;
         int status = 0;
