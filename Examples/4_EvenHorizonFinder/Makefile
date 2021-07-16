@@ -7,7 +7,7 @@ OBJ_DIRS := $(filter-out $(SRC_DIRS),$(INC_DIRS))
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CXX := g++
-CXXFLAGS := $(INC_FLAGS) -O3 -std=c++14 -Wall
+CXXFLAGS := $(INC_FLAGS) -O3 -std=c++14
 LDFLAGS := -lgsl
 
 srcfiles := $(shell find . -name "*.cpp") $(shell find $(OBJ_DIRS) -name "*.cpp")
