@@ -8,6 +8,7 @@
 
 #include "ODESolverCore.hpp"
 #include "Rk4vec.hpp"
+#include "TensorAlgebra.hpp"
 
 template <typename data_t> class render_black_hole
 {

@@ -18,15 +18,22 @@ using namespace std;
 
 int main(void)
 {
+    // =============================
+    // ===== Parallel Render =======
+    // ===== Using MPI      ========
+    // =============================
+
     int numtasks, rank, sendcount, recvcount, source;
     int size_per_task;
     const int resolution = 100;
 
     // ============= MPI INIT ================
+
     MPI_Init(NULL, NULL);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
     size_per_task = (int)ceil(resolution * resolution / (double)numtasks);
+
     // ============= DEFINITIONS ==============
 
     char name_render[] = "out.ppm";
