@@ -8,7 +8,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CXX := g++
 CXXFLAGS := $(INC_FLAGS) -O3 -std=c++14
-LDFLAGS := -lgsl -lmpi
+LDFLAGS := -lgsl -lmpi -lgslcblas
 
 srcfiles := $(shell find . -name "*.cpp") $(shell find $(OBJ_DIRS) -name "*.cpp")
 objects  := $(patsubst %.cpp, %.o, $(srcfiles))
