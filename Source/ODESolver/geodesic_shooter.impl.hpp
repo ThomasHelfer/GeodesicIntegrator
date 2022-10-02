@@ -9,8 +9,8 @@ template <typename data_t>
 void geodesic_shooter<data_t>::shoot(
     Vec3 center, double shift, int numberofgeodesics, bool set_geodesic_null,
     const double time_end, const double time_start, const double dt,
-    const double epsabs = 1e-6, const double epsrel = 1e-6,
-    const double hstart = 1e-6, const int nmax = 1000)
+    const double epsabs, const double epsrel,
+    const double hstart, const int nmax)
 {
     data_t metric;
     gsl_odeiv2_system sys = {metric.eval_diff_eqn, nullptr, 8};
