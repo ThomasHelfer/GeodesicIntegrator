@@ -10,19 +10,20 @@
 #include "TensorAlgebra.hpp"
 #include "tensor.hpp"
 
+// Mass of the black hole
+#define M 1
+
 class Black_Hole_isometric
 {
 
   public:
-    static tensor<2, double> get_metric(double M, double x, double y, double z);
+    static tensor<2, double> get_metric(double x, double y, double z, double t);
 
-    static tensor<3, double> get_metric_deriv(double M, double x, double y,
-                                              double z);
-
+    static tensor<3, double> get_metric_deriv(double x, double y, double z,
+                                              double t);
 
     static int eval_diff_eqn(double t, const double y[], double f[],
                              void *params);
-
 };
 
 #endif

@@ -6,7 +6,8 @@
 namespace TensorAlgebra
 {
 
-inline tensor<3, double> get_chris(const tensor<2, double> g_UU, const tensor<3, double> dg)
+inline tensor<3, double> get_chris(const tensor<2, double> g_UU,
+                                   const tensor<3, double> dg)
 {
 
     // Init
@@ -123,7 +124,8 @@ inline tensor<2, data_t> compute_inverse(const tensor<2, data_t, 4> &matrix)
     return h_UU;
 }
 
-inline double calculate_norm( const double vx, const  double vy, const  double vz,double vt, const tensor<2,double> g)
+inline double calculate_norm(const double vx, const double vy, const double vz,
+                             double vt, const tensor<2, double> g)
 {
     double norm = 0;
     tensor<1, double> dx = {vx, vy, vz, vt};
@@ -133,13 +135,13 @@ inline double calculate_norm( const double vx, const  double vy, const  double v
 }
 
 // Change the vt component to set norm to any value
-template<class data_t>
-inline Vec3 set_norm(Vec3 v, const double norm_val, const double M=1)
+template <class data_t>
+inline Vec3 set_norm(Vec3 v, const double norm_val, const double M = 1)
 {
     data_t metric;
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
-    tensor<2, double> g = metric.get_metric(M, v.x, v.y, v.z, v.t);
-    double norm = calculate_norm(v.vx,v.vy,v.vz,v.vt,g);
+    tensor<2, double> g = metric.get_metric(v.x, v.y, v.z, v.t);
+    double norm = calculate_norm(v.vx, v.vy, v.vz, v.vt, g);
 
     double b = 0;
     for (int i = 0; i < 3; i++)

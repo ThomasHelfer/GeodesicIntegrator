@@ -51,13 +51,12 @@ int main(void)
     const int nmax = 1000;
 
     const Vec3 initial_data(center_x, center_y, center_z, start_time,
-                            velocity_x, velocity_y, velocity_z, lapse, epsabs,
-                            epsrel, hstart, nmax);
+                            velocity_x, velocity_y, velocity_z, lapse);
 
     geodesic_shooter<Black_Hole> pewpew;
 
     pewpew.shoot(initial_data, shift_y, numberofgeodesics, null_geodesic,
-                 end_time, start_time, dt);
+                 end_time, start_time, dt, epsabs, epsrel, hstart, nmax);
 
     return 0;
 }

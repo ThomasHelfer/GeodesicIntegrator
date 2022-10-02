@@ -33,18 +33,14 @@ class Oscilloton
     static int eval_diff_eqn(double t, const double y[], double f[],
                              void *params);
 
-
-
     static double get_a202(double rr, int component);
 
     static double get_c202(double rr, int component);
 
-    static tensor<2, double> get_metric(double M, double x, double y, double z,
-                                        double t);
+    static tensor<2, double> get_metric(double x, double y, double z, double t);
 
-    static tensor<3, double> get_metric_deriv(double M, double x, double y,
-                                              double z, double t);
-
+    static tensor<3, double> get_metric_deriv(double x, double y, double z,
+                                              double t);
 };
 
 #endif
