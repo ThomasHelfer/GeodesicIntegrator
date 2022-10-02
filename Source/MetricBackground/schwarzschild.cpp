@@ -1,6 +1,9 @@
 #include "schwarzschild.hpp"
 
-tensor<2, double> Black_Hole::get_metric(double M, double x, double y, double z, double t)
+// Mass of the black hole
+#define M 1
+
+tensor<2, double> Black_Hole::get_metric(double x, double y, double z, double t)
 {
 
     tensor<2, double> jacobian;
@@ -59,8 +62,8 @@ tensor<2, double> Black_Hole::get_metric(double M, double x, double y, double z,
     return g;
 }
 
-tensor<3, double> Black_Hole::get_metric_deriv(double M, double x, double y,
-                                               double z, double t )
+tensor<3, double> Black_Hole::get_metric_deriv(double x, double y, double z,
+                                               double t)
 {
 
     tensor<3, double> dg;
@@ -68,30 +71,29 @@ tensor<3, double> Black_Hole::get_metric_deriv(double M, double x, double y,
     tensor<2, double> g_dx;
     tensor<2, double> g_dy;
     tensor<2, double> g_dz;
-    double h = 1e-8;
+    tensor<2, double> g_dt;
+    double h = 1e-4;
 
-    g = get_metric(M, x, y, z, t);
-    g_dx = get_metric(M, x - h, y, z, t);
-    g_dy = get_metric(M, x, y - h, z, t);
-    g_dz = get_metric(M, x, y, z - h, t);
+    g = get_metric(x, y, z, t);
+    g_dx = get_metric(x - h, y, z, t);
+    g_dy = get_metric(x, y - h, z, t);
+    g_dz = get_metric(x, y, z - h, t);
+    g_dt = get_metric(x, y, z, t - h);
 
     FOR2(i, j)
     {
         dg[i][j][0] = (g[i][j] - g_dx[i][j]) / h;
         dg[i][j][1] = (g[i][j] - g_dy[i][j]) / h;
         dg[i][j][2] = (g[i][j] - g_dz[i][j]) / h;
-        // Metric is static
-        dg[i][j][3] = 0;
+        dg[i][j][3] = (g[i][j] - g_dt[i][j]) / h;
     }
     return dg;
 }
-
 
 int Black_Hole::eval_diff_eqn(double t, const double y[], double f[],
                               void *params)
 {
 
-    double M = 1;
     tensor<2, double> g; // Metix Index low low
     tensor<2, double> g_UU;
     tensor<3, double> dg;        //
@@ -141,11 +143,11 @@ int Black_Hole::eval_diff_eqn(double t, const double y[], double f[],
     */
     // ====================
 
-    g = get_metric(M, v.x, v.y, v.z, v.t);
+    g = get_metric(v.x, v.y, v.z, v.t);
 
     g_UU = TensorAlgebra::compute_inverse(g);
 
-    dg = get_metric_deriv(M, v.x, v.y, v.z, v.t);
+    dg = get_metric_deriv(v.x, v.y, v.z, v.t);
 
     //=========================
 
@@ -164,4 +166,3 @@ int Black_Hole::eval_diff_eqn(double t, const double y[], double f[],
 
     return GSL_SUCCESS;
 }
-
