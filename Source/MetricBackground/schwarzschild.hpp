@@ -16,6 +16,8 @@ class Black_Hole
 {
 
   public:
+    const int dim = 4;
+
     static tensor<2, double> get_metric(double x, double y, double z, double t);
 
     static tensor<3, double> get_metric_deriv(double x, double y, double z,

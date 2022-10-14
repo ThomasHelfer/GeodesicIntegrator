@@ -32,6 +32,39 @@ inline tensor<3, double> get_chris(const tensor<2, double> g_UU,
 
     return chris_ULL;
 }
+template <int dim>  
+inline tensor<3, double,dim> get_chris(const tensor<2, double,dim> g_UU,
+                                   const tensor<3, double,dim> dg)
+{
+
+    // Init
+    tensor<3, double,dim> chris_LLL; // Christoffel index low low low
+    tensor<3, double,dim> chris_ULL; // Christoffel index high low low
+
+    for (int i = 0; i < dim; i++)
+        for (int j = 0; j < dim; j++)
+            for (int k = 0; k < dim; k++)
+    {
+        chris_LLL[i][j][k] = 0;
+        chris_ULL[i][j][k] = 0;
+    }
+    // Calculation of Christoffel symbols
+    for (int i = 0; i < dim; i++)
+        for (int j = 0; j < dim; j++)
+            for (int k = 0; k < dim; k++)
+    {
+        chris_LLL[i][j][k] = 0.5 * (dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
+    }
+    for (int i = 0; i < dim; i++)
+        for (int j = 0; j < dim; j++)
+            for (int k = 0; k < dim; k++)
+    {
+        chris_ULL[i][j][k] = 0;
+        FOR1(l) { chris_ULL[i][j][k] += g_UU[i][l] * chris_LLL[l][j][k]; }
+    }
+
+    return chris_ULL;
+}
 
 /// Computes the inverse of a general 3x3 matrix.
 /// Note: for a symmetric matrix use the simplified function
@@ -134,19 +167,31 @@ inline double calculate_norm(const double vx, const double vy, const double vz,
     return norm;
 }
 
+template<int dim>
+inline double calculate_norm(const double vx, const double vy, const double vz,
+                             double vt, const tensor<2, double,dim> g)
+{
+    double norm = 0;
+    tensor<1, double> dx = {vx, vy, vz, vt};
+
+    FOR2(i, j) { norm += g[i][j] * dx[i] * dx[j]; }
+    return norm;
+}
+
 // Change the vt component to set norm to any value
 template <class data_t>
-inline Vec3 set_norm(Vec3 v, const double norm_val, const double M = 1)
+inline Vec3 set_norm(Vec3 v, const double norm_val)
 {
     data_t metric;
     tensor<1, double> dx = {v.vx, v.vy, v.vz, v.vt};
-    tensor<2, double> g = metric.get_metric(v.x, v.y, v.z, v.t);
+    auto g = metric.get_metric(v.x, v.y, v.z, v.t);
     double norm = calculate_norm(v.vx, v.vy, v.vz, v.vt, g);
+    int spacedim = metric.dim-1;
 
     double b = 0;
     for (int i = 0; i < 3; i++)
     {
-        b += g[i][3] * dx[i] + g[3][i] * dx[i];
+        b += g[i][spacedim] * dx[i] + g[spacedim][i] * dx[i];
     }
 
     double discriminant = b * b;
@@ -154,11 +199,11 @@ inline Vec3 set_norm(Vec3 v, const double norm_val, const double M = 1)
     {
         for (int j = 0; j < 3; j++)
         {
-            discriminant += -(4 * g[3][3] * g[i][j] * dx[i] * dx[j]);
+            discriminant += -(4 * g[spacedim][spacedim] * g[i][j] * dx[i] * dx[j]);
         }
     }
 
-    v.vt = (-b - sqrt(discriminant)) / (2.0 * g[3][3]);
+    v.vt = (-b - sqrt(discriminant)) / (2.0 * g[spacedim][spacedim]);
 
     return v;
 }
