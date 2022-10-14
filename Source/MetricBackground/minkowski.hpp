@@ -12,6 +12,8 @@
 #include <gsl/gsl_matrix_double.h>
 #include <gsl/gsl_linalg.h>
 
+
+// Do not change Dimension without talking to me :) you need to do more than just changing dimensions 
 #define DIM 5
 
 class Minkowski
