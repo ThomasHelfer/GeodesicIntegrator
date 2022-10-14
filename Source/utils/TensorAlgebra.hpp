@@ -32,6 +32,39 @@ inline tensor<3, double> get_chris(const tensor<2, double> g_UU,
 
     return chris_ULL;
 }
+template <int dim>  
+inline tensor<3, double,dim> get_chris(const tensor<2, double,dim> g_UU,
+                                   const tensor<3, double,dim> dg)
+{
+
+    // Init
+    tensor<3, double,dim> chris_LLL; // Christoffel index low low low
+    tensor<3, double,dim> chris_ULL; // Christoffel index high low low
+
+    for (int i = 0; i < dim; i++)
+        for (int j = 0; j < dim; j++)
+            for (int k = 0; k < dim; k++)
+    {
+        chris_LLL[i][j][k] = 0;
+        chris_ULL[i][j][k] = 0;
+    }
+    // Calculation of Christoffel symbols
+    for (int i = 0; i < dim; i++)
+        for (int j = 0; j < dim; j++)
+            for (int k = 0; k < dim; k++)
+    {
+        chris_LLL[i][j][k] = 0.5 * (dg[j][i][k] + dg[k][i][j] - dg[j][k][i]);
+    }
+    for (int i = 0; i < dim; i++)
+        for (int j = 0; j < dim; j++)
+            for (int k = 0; k < dim; k++)
+    {
+        chris_ULL[i][j][k] = 0;
+        FOR1(l) { chris_ULL[i][j][k] += g_UU[i][l] * chris_LLL[l][j][k]; }
+    }
+
+    return chris_ULL;
+}
 
 /// Computes the inverse of a general 3x3 matrix.
 /// Note: for a symmetric matrix use the simplified function
